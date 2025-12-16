@@ -53,7 +53,7 @@ public class AtividadeAssociacaoApplication {
 					Produto produto = new Produto();
 					produto.setDescricao("Produto " + i);
 					produto.setValor(new BigDecimal(10.00 * i));
-					produto.setImageUrl("https://picsum.photos/seed/" + i + "/200/300"); // Ensure imageUrl is set
+					produto.setImageUrl("https://picsum.photos/seed/" + i + "/200/300");
 					produtoRepository.salvar(produto);
 				}
 			}

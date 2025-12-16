@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(head, main)">
+
+<head th:replace="${head}"></head>
+
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+<main class="flex-grow-1 d-flex align-items-center justify-content-center"
+      th:replace="${main}">
+</main>
+
+<footer th:replace="~{fragmentos/footer :: footer}"></footer>
+
+</body>
+</html>
