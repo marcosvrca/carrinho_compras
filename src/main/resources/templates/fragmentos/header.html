@@ -1,14 +1,18 @@
-<header class="container"
-        th:fragment="header"
+<header th:fragment="header"
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded-2 mb-4">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm w-100">
 
-            <!-- Logo -->
-            <a class="navbar-brand" th:href="@{/}">Info Mix</a>
+        <div class="container-fluid px-4">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            <!-- LOGO -->
+            <a class="navbar-brand fw-bold" th:href="@{/}">
+                Info Mix
+            </a>
+
+            <!-- BOTÃO MOBILE -->
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -16,7 +20,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
                 <!-- LADO ESQUERDO -->
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav me-lg-3">
 
                     <!-- VISÍVEL PARA TODOS -->
                     <li class="nav-item">
@@ -34,7 +38,7 @@
 
                     <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                         <a class="nav-link" th:href="@{/produtos/config}">
-                            Configurações de Produtos
+                            Configurações
                         </a>
                     </li>
 
@@ -46,19 +50,24 @@
                     </li>
                 </ul>
 
-                <!-- SEARCH -->
-                <form class="d-flex mx-auto w-50" th:action="@{/produtos}" method="get">
+                <!-- SEARCH (RESPONSIVO) -->
+                <form class="d-flex flex-grow-1 mx-lg-4 my-2 my-lg-0"
+                      th:action="@{/produtos}"
+                      method="get">
+
                     <input class="form-control me-2"
                            type="search"
-                           name="q"
-                           placeholder="Buscar produtos, marcas e categorias">
+                           name="nome"
+                           th:value="${nome}"
+                           placeholder="Buscar produtos...">
+
                     <button class="btn btn-warning" type="submit">
                         🔍
                     </button>
                 </form>
 
                 <!-- LADO DIREITO -->
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-lg-auto">
 
                     <!-- NÃO LOGADO -->
                     <li class="nav-item" sec:authorize="!isAuthenticated()">

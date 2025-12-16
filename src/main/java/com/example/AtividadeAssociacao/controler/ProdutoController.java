@@ -27,14 +27,14 @@ public class ProdutoController {
     public String listar(@RequestParam(required = false) String nome, Model model) {
         List<Produto> produtos;
         if (nome != null && !nome.isEmpty()) {
-            produtos = produtoRepository.findByDescricaoContainingIgnoreCase(nome); // Needs new repo method
+            produtos = produtoRepository.findByDescricaoContainingIgnoreCase(nome);
         } else {
             produtos = produtoRepository.findAll();
         }
         model.addAttribute("produtos", produtos);
         model.addAttribute("carrinho", carrinhoSession.getCarrinho());
-        model.addAttribute("nome", nome); // Add the search term back to the model for the input field
-        return "produto/list"; // página lista.html
+        model.addAttribute("nome", nome);
+        return "produto/list";
     }
 
     @GetMapping("/config")

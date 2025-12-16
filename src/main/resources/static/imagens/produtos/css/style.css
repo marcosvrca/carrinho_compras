@@ -1,7 +1,14 @@
-body {
-    min-height: 100vh;
-    background: linear-gradient(135deg,
-    #f4f6f8 0%,
-    #e9eef3 50%,
-    #fdfdfd 100%);
+.navbar {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+}
+
+@media (max-width: 991px) {
+    .navbar form {
+        margin-top: 0.75rem;
+    }
 }
