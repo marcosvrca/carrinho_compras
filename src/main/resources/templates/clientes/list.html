@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragmentos/layout :: layout(~{::head},~{::main})}">
+
+<head th:replace="~{fragmentos/head :: head(~{})}">
+    <title>Lista de Clientes</title>
+</head>
+
+<body>
+
+<main class="container mt-5" sec:authorize="hasRole('ADMIN')">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🧍 Lista de Clientes</h2>
+        <a href="/clientes/novo?tipo=fisica" class="btn btn-primary">➕ Novo Cliente (Pessoa Física)</a>
+        <a href="/clientes/novo?tipo=juridica" class="btn btn-primary">➕ Novo Cliente (Pessoa Jurídica)</a>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Nome / Razão Social</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${clientes}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.identificacao}"></td>
+            <td th:text="${p.email}"></td>
+            <td th:text="${p.telefone}"></td>
+            <td>
+                <a th:href="@{'/clientes/editar/' + ${p.id}}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                <a th:href="@{'/clientes/remover/' + ${p.id}}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Tem certeza que deseja excluir este cliente?');">
+                    🗑️ Excluir
+                </a>
+                <a th:href="@{'/vendas/cliente/' + ${p.id}}" class="btn btn-info btn-sm">🛒 Ver Vendas</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/" class="btn btn-secondary mt-3">⬅️ Voltar</a>
+
+</main>
+
+</body>
+</html>

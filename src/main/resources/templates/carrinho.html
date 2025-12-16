@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html th:replace="~{fragmentos/layout :: layout(~{::head}, ~{::main})}"
+      xmlns:th="http://www.thymeleaf.org">
+
+<!-- HEAD -->
+<head th:replace="~{fragmentos/head :: head(~{})}"></head>
+
+<!-- MAIN -->
+<main class="container mt-4">
+
+    <h2 class="mb-4">🛒 Carrinho de Compras</h2>
+
+    <div th:if="${carrinho.itens.isEmpty()}">
+        <p>Seu carrinho está vazio.</p>
+    </div>
+
+    <div th:if="${!carrinho.itens.isEmpty()}">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Preço Unitário</th>
+                <th>Preço Total</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item, itemStat : ${carrinho.itens}">
+                <td th:text="${item.produto.descricao}"></td>
+                <td th:text="${item.quantidade}"></td>
+                <td th:text="${#numbers.formatDecimal(item.produto.valor, 2, 'COMMA', 2, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(item.produto.valor * item.quantidade, 2, 'COMMA', 2, 'POINT')}"></td>
+                <td>
+                    <form th:action="@{/produtos/atualizar-carrinho}" method="post" style="display: inline;">
+                        <input type="hidden" name="produtoId" th:value="${item.produto.id}" />
+                        <input type="number" name="quantidade" th:value="${item.quantidade}" min="0" class="form-control" style="width: 80px; display: inline-block;" onchange="this.form.submit();"/>
+                        <button type="submit" class="btn btn-primary btn-sm" style="display: none;">Atualizar</button>
+                    </form>
+                    <a th:href="@{'/produtos/remover-do-carrinho/' + ${item.produto.id}}" class="btn btn-danger btn-sm">Remover Tudo</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h4 class="mt-4">Total: <span th:text="${#numbers.formatDecimal(carrinho.valorTotal, 2, 'COMMA', 2, 'POINT')}"></span></h4>
+
+        <a href="/vendas/finalizar" class="btn btn-primary mt-3">Finalizar Compra</a>
+    </div>
+
+    <a href="/produtos" class="btn btn-secondary mt-3">Continuar Comprando</a>
+
+</main>
+
+</html>

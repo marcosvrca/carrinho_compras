@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html th:replace="~{fragmentos/layout :: layout(~{::head}, ~{::main})}"
+      xmlns:th="http://www.thymeleaf.org">
+
+<!-- HEAD -->
+<head th:replace="~{fragmentos/head :: head(~{})}"></head>
+
+<!-- MAIN -->
+<main class="container mt-4">
+
+    <h2 class="mb-4">Minhas Compras</h2>
+
+    <div th:if="${minhasVendas.isEmpty()}">
+        <p>Você ainda não realizou nenhuma compra.</p>
+    </div>
+
+    <div th:if="${!minhasVendas.isEmpty()}">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>ID da Venda</th>
+                <th>Data da Venda</th>
+                <th>Total da Venda</th>
+                <th>Itens</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="venda : ${minhasVendas}">
+                <td th:text="${venda.id}"></td>
+                <td th:text="${#temporals.format(venda.data, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${#numbers.formatDecimal(venda.total(), 2, 'COMMA', 2, 'POINT')}"></td>
+                <td>
+                    <ul>
+                        <li th:each="item : ${venda.itens}">
+                            <span th:text="${item.produto.descricao}"></span> -
+                            <span th:text="${item.quantidade}"></span> x
+                            <span th:text="${#numbers.formatDecimal(item.produto.valor, 2, 'COMMA', 2, 'POINT')}"></span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/produtos" class="btn btn-secondary mt-3">⬅️ Voltar para Compras</a>
+
+</main>
+
+</html>

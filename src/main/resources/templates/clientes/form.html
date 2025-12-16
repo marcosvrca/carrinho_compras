@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragmentos/layout :: layout(~{::head},~{::main})}">
+
+<head th:replace="~{fragmentos/head :: head(~{})}"></head>
+
+<body>
+
+<main class="container mt-5">
+
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+            <h4 class="mb-0" th:text="${pessoa.id != null ? '✏️ Editar Cliente' : '➕ Novo Cliente'}"></h4>
+            <span th:text="${tipo == 'FISICA' ? 'Pessoa Física' : 'Pessoa Jurídica'}"
+                  class="badge bg-light text-primary fs-6"></span>
+        </div>
+
+        <div class="card-body">
+            <form th:action="${pessoa.id != null} ? @{/clientes/atualizar} : @{/clientes/salvar}"
+                  method="post" class="row g-3 needs-validation" novalidate>
+
+                <input type="hidden" name="id" th:value="${pessoa.id}"/>
+                <input type="hidden" name="tipo" th:value="${tipo}"/>
+
+                <div th:if="${tipo == 'FISICA'}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nome Completo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-person-badge"></i></span>
+                                <input type="text" class="form-control" name="nome"
+                                       th:value="${pessoa.nome}"
+                                       th:classappend="${#fields.hasErrors('pessoa.nome')} ? 'is-invalid' : ''"
+                                       placeholder="Digite o nome completo" required/>
+                                <div class="invalid-feedback" th:errors="${pessoa.nome}"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">CPF</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-card-text"></i></span>
+                                <input type="text" class="form-control" name="cpfCnpj"
+                                       th:value="${pessoa.cpf}"
+                                       th:classappend="${#fields.hasErrors('pessoa.cpf')} ? 'is-invalid' : ''"
+                                       placeholder="Digite o CPF" required/>
+                                <div class="invalid-feedback" th:errors="${pessoa.cpf}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${tipo == 'JURIDICA'}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Razão Social</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-building"></i></span>
+                                <input type="text" class="form-control" name="nome"
+                                       th:value="${pessoa.razaoSocial}"
+                                       th:classappend="${#fields.hasErrors('pessoa.razaoSocial')} ? 'is-invalid' : ''"
+                                       placeholder="Digite a razão social" required/>
+                                <div class="invalid-feedback" th:errors="${pessoa.razaoSocial}"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">CNPJ</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-card-list"></i></span>
+                                <input type="text" class="form-control" name="cpfCnpj"
+                                       th:value="${pessoa.cnpj}"
+                                       th:classappend="${#fields.hasErrors('pessoa.cnpj')} ? 'is-invalid' : ''"
+                                       placeholder="Digite o CNPJ" required/>
+                                <div class="invalid-feedback" th:errors="${pessoa.cnpj}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control" name="email"
+                               th:value="${pessoa.email}"
+                               th:classappend="${#fields.hasErrors('pessoa.email')} ? 'is-invalid' : ''"
+                               placeholder="exemplo@email.com" required/>
+                        <div class="invalid-feedback" th:errors="${pessoa.email}"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Telefone</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-telephone"></i></span>
+                        <input type="text" class="form-control" name="telefone"
+                               th:value="${pessoa.telefone}"
+                               th:classappend="${#fields.hasErrors('pessoa.telefone')} ? 'is-invalid' : ''"
+                               placeholder="(99) 99999-9999" required/>
+                        <div class="invalid-feedback" th:errors="${pessoa.telefone}"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-6" th:if="${pessoa.id == null}">
+                    <label class="form-label fw-semibold">Senha</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                        <input type="password" class="form-control" name="password"
+                               th:classappend="${#fields.hasErrors('pessoa.password')} ? 'is-invalid' : ''"
+                               placeholder="Digite sua senha" required/>
+                        <div class="invalid-feedback" th:errors="${pessoa.password}"></div>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-4 d-flex justify-content-between">
+                    <a href="/clientes" class="btn btn-secondary">
+                        ⬅️ Voltar
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        💾 Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

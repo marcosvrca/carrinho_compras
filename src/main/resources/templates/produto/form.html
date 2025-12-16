@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html th:replace="~{fragmentos/layout :: layout(~{::head}, ~{::main})}"
+      xmlns:th="http://www.thymeleaf.org">
+
+<!-- HEAD -->
+<head th:replace="~{fragmentos/head :: head(~{})}"></head>
+
+<!-- MAIN -->
+<main class="container mt-4">
+
+    <h2 class="mb-4" th:text="${produto.id == null} ? 'Cadastrar Produto' : 'Editar Produto'"></h2>
+
+    <form th:action="@{/produtos/salvar}"
+          th:object="${produto}"
+          method="post"
+          class="row g-3 needs-validation"
+          novalidate>
+
+        <input type="hidden" th:field="*{id}"/>
+
+        <div class="col-md-8">
+            <label class="form-label">Descrição</label>
+            <input type="text" th:field="*{descricao}" class="form-control" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid' : ''" required>
+            <div class="invalid-feedback" th:errors="*{descricao}">Informe a descrição.</div>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Valor</label>
+            <input type="number" th:field="*{valor}" step="0.01" class="form-control" th:classappend="${#fields.hasErrors('valor')} ? 'is-invalid' : ''" required>
+            <div class="invalid-feedback" th:errors="*{valor}">Informe o valor.</div>
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label">URL da Imagem</label>
+            <input type="text" th:field="*{imageUrl}" class="form-control" th:classappend="${#fields.hasErrors('imageUrl')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{imageUrl}">Informe a URL da imagem.</div>
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-success">Salvar</button>
+            <a href="/produtos" class="btn btn-secondary">Cancelar</a>
+        </div>
+
+    </form>
+
+</main>
+
+</html>

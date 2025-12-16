@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html th:replace="~{fragmentos/layout :: layout(~{::head}, ~{::main})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragmentos/head :: head(~{})}"></head>
+
+<main class="container mt-4">
+
+    <h2 class="mb-4">Configurações de Produtos</h2>
+
+    <a href="/produtos/novo" class="btn btn-primary mb-3" sec:authorize="hasAuthority('ROLE_ADMIN')">➕ Novo Produto</a>
+
+    <!-- form de filtro -->
+    <form th:action="@{/produtos/config}" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="nome" class="form-control" placeholder="Filtrar por nome do produto" th:value="${nome}">
+            <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+            <a th:href="@{/produtos/config}" class="btn btn-outline-secondary">Limpar</a>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-md-3 mb-3" th:each="p : ${produtos}">
+            <div class="card">
+                <img th:src="${p.imageUrl}" class="card-img-top" alt="Imagem do Produto" style="height: 150px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${p.descricao}"></h5>
+                    <p class="card-text" th:text="${#numbers.formatDecimal(p.valor, 2, 'COMMA', 2, 'POINT')}"></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                            <a th:href="@{'/produtos/editar/' + ${p.id}}" class="btn btn-warning btn-sm">Editar</a>
+                            <a th:href="@{'/produtos/excluir/' + ${p.id}}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Deseja realmente excluir este produto?')">
+                                Excluir
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html th:replace="~{fragmentos/layout :: layout(~{::head},~{::main})}"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragmentos/head :: head(~{::title})}">
+    <title>Nova Venda</title>
+</head>
+
+<main class="container mt-5">
+
+    <h2 class="mb-4">🛒 Nova Venda</h2>
+
+    <!-- ÚNICO FORMULARIO PARA A VENDA -->
+    <form th:action="@{/vendas/salvar}" th:object="${venda}" method="post">
+
+        <input type="hidden" th:field="*{id}"/>
+
+        <!-- Cliente -->
+        <div class="mb-3">
+            <label class="form-label">Cliente</label>
+            <select class="form-select" name="clienteId" required> <!-- Changed from th:field="*{cliente.id}" -->
+                <option value="">Selecione um cliente</option>
+                <option th:each="c : ${clientes}"
+                        th:value="${c.id}"
+                        th:text="${c.identificacao}"
+                        th:selected="${venda.cliente != null && venda.cliente.id == c.id}"> <!-- Add th:selected for editing -->
+                </option>
+            </select>
+        </div>
+
+        <!-- Data -->
+        <div class="mb-3">
+            <label class="form-label">Data da Venda</label>
+            <!-- Data is now set in controller on save, or can be pre-filled if editing -->
+            <input type="datetime-local" th:field="*{data}" class="form-control"> <!-- Removed readonly -->
+        </div>
+
+        <hr>
+        <h4>Itens da Venda</h4>
+
+        <!-- FORM SEPARADO PARA ADICIONAR ITEM (AGORA FAZ PARTE DO FORM PRINCIPAL) -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label">Produto</label>
+                <select class="form-select" id="produtoSelect">
+                    <option value="">Selecione</option>
+                    <option th:each="p : ${produtos}"
+                            th:value="${p.id}"
+                            th:text="${p.descricao}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Quantidade</label>
+                <input type="number" min="1" step="1" id="quantidadeInput" value="1" class="form-control">
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="button" id="addItemButton" class="btn btn-primary w-100">➕ Adicionar</button>
+            </div>
+        </div>
+
+        <!-- LISTA DE ITENS -->
+        <table class="table table-bordered">
+            <thead class="table-light">
+            <tr>
+                <th>Produto</th>
+                <th>Qtd</th>
+                <th>Total</th>
+                <th>Ação</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="i, iter : ${venda.itens}">
+                <td th:text="${i.produto.descricao}"></td>
+                <td th:text="${i.quantidade}"></td>
+                <td th:text="${#numbers.formatDecimal(i.total(),1,2)}"></td>
+                <td>
+                    <a th:href="@{/vendas/removeItem(index=${iter.index})}"
+                       class="btn btn-danger btn-sm">Remover</a>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(venda.itens)}">
+                <td colspan="4" class="text-center text-muted">Nenhum item ainda.</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-success">💾 Salvar Venda</button>
+        <a th:href="@{/vendas}" class="btn btn-secondary">Cancelar</a>
+
+    </form>
+
+
+    <!-- Script para adicionar item via JavaScript e submit assíncrono -->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var addItemButton = document.getElementById('addItemButton');
+            addItemButton.addEventListener('click', function() {
+                var produtoId = document.getElementById('produtoSelect').value;
+                var quantidade = document.getElementById('quantidadeInput').value;
+
+                if (produtoId && quantidade > 0) {
+                    var form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = [[@{/vendas/addItem}]]; // Thymeleaf URL expression
+
+                    var hiddenProdutoId = document.createElement('input');
+                    hiddenProdutoId.type = 'hidden';
+                    hiddenProdutoId.name = 'produtoId';
+                    hiddenProdutoId.value = produtoId;
+                    form.appendChild(hiddenProdutoId);
+
+                    var hiddenQuantidade = document.createElement('input');
+                    hiddenQuantidade.type = 'hidden';
+                    hiddenQuantidade.name = 'quantidade';
+                    hiddenQuantidade.value = quantidade;
+                    form.appendChild(hiddenQuantidade);
+
+                    // Append existing venda details to maintain session model state
+                    // This is crucial for @SessionAttributes to work correctly
+                    var hiddenVendaId = document.createElement('input');
+                    hiddenVendaId.type = 'hidden';
+                    hiddenVendaId.name = 'id';
+                    hiddenVendaId.value = [[${venda.id != null ? venda.id : ''}]];
+                    form.appendChild(hiddenVendaId);
+
+                    var hiddenClienteId = document.createElement('input');
+                    hiddenClienteId.type = 'hidden';
+                    hiddenClienteId.name = 'clienteId'; // Corrected name
+                    hiddenClienteId.value = [[${venda.cliente != null ? venda.cliente.id : ''}]];
+                    form.appendChild(hiddenClienteId);
+
+                    // CSRF Token
+                    var csrfParamName = [[${_csrf.parameterName}]];
+                    var csrfToken = [[${_csrf.token}]];
+                    var hiddenCsrf = document.createElement('input');
+                    hiddenCsrf.type = 'hidden';
+                    hiddenCsrf.name = csrfParamName;
+                    hiddenCsrf.value = csrfToken;
+                    form.appendChild(hiddenCsrf);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                } else {
+                    alert('Selecione um produto e informe uma quantidade válida.');
+                }
+            });
+        });
+    </script>
+
+</main>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html th:replace="~{fragmentos/layout :: layout(~{::head},~{::main})}"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragmentos/head :: head(~{})}">
+    <title>Detalhes da Venda</title>
+</head>
+
+<body>
+
+<main class="container mt-5">
+
+    <h2 class="mb-4">🧾 Detalhes da Venda</h2>
+
+    <div class="mb-3">
+        <strong>ID:</strong> <span th:text="${venda.id}"></span><br>
+        <strong>Data:</strong> <span th:text="${#temporals.format(venda.data, 'dd/MM/yyyy HH:mm')}"></span><br>
+        <strong>Cliente:</strong> <span th:text="${venda.cliente.getNome()}"></span>
+    </div>
+
+    <table class="table table-hover">
+        <thead class="table-secondary">
+        <tr>
+            <th>Cliente</th>
+            <th>Produto</th>
+            <th>Valor Unitário (R$)</th>
+            <th>Quantidade</th>
+            <th>Total Item (R$)</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="item : ${venda.itens}">
+            <td th:text="${venda.cliente.identificacao}"></td>
+            <td th:text="${item.produto.descricao}"></td>
+            <td th:text="${#numbers.formatDecimal(item.produto.valor, 2, 'POINT', 2, 'COMMA')}"></td>
+            <td th:text="${item.quantidade}"></td>
+            <td th:text="${#numbers.formatDecimal(item.total(), 2, 'POINT', 2, 'COMMA')}"></td>
+        </tr>
+        </tbody>
+
+        <tfoot class="table-light">
+        <tr>
+            <td colspan="4" class="text-end fw-bold">Total da Venda:</td>
+            <td class="fw-bold"
+                th:text="${#numbers.formatDecimal(venda.total(), 2, 'POINT', 2, 'COMMA')}"></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <a href="/vendas" class="btn btn-secondary mt-3">⬅️ Voltar</a>
+
+</main>
+
+</body>
+</html>

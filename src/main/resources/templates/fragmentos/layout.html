@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(head, main)">
+
+<head th:replace="${head}"></head>
+
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="~{fragmentos/header :: header}"></header>
+
+<main class="flex-grow-1" th:replace="${main}"></main>
+
+<footer th:replace="~{fragmentos/footer :: footer}"></footer>
+
+<script>
+    (() => {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html th:replace="~{fragmentos/layout :: layout(~{::head}, ~{::main})}"
+      xmlns:th="http://www.thymeleaf.org">
+
+<!-- HEAD -->
+<head th:replace="~{fragmentos/head :: head(~{})}"></head>
+
+<!-- MAIN -->
+<main class="container mt-4">
+
+    <div class="card text-center border-success mb-3">
+        <div class="card-header bg-success text-white">
+            <h2 class="card-title">🎉 Compra Efetuada com Sucesso! 🎉</h2>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Obrigado pela sua compra. Seu pedido foi processado.</p>
+            <a href="/produtos" class="btn btn-primary mt-3">Continuar Comprando</a>
+            <a href="/vendas/minhas-compras" class="btn btn-info mt-3">Ver Minhas Compras</a>
+        </div>
+    </div>
+
+</main>
+
+</html>
