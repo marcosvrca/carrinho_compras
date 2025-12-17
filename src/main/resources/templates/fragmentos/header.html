@@ -87,6 +87,23 @@
                         </a>
                     </li>
 
+                    <!-- CARRINHO (sempre visível) -->
+                    <li class="nav-item">
+                        <a class="btn btn-success btn-sm"
+                           th:href="@{/produtos/carrinho}">
+                            🛒 Carrinho
+                        </a>
+                    </li>
+
+                    <!-- MINHAS COMPRAS (USER autenticado, não ADMIN) -->
+                    <li class="nav-item"
+                        sec:authorize="isAuthenticated() and !hasRole('ADMIN')">
+                        <a class="btn btn-info btn-sm"
+                           th:href="@{/vendas/minhas-compras}">
+                            Minhas Compras
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </div>
