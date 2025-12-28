@@ -109,13 +109,4 @@ public class ProdutoController {
         }
         return "redirect:/produtos/carrinho";
     }
-
-    @PostMapping("/atualizar-carrinho")
-    public String atualizarCarrinho(@RequestParam("produtoId") Long produtoId, @RequestParam("quantidade") int quantidade) {
-        Produto produto = produtoRepository.buscarPorId(produtoId);
-        if (produto != null) {
-            carrinhoSession.getCarrinho().atualizarItem(produto, quantidade);
-        }
-        return "redirect:/produtos/carrinho";
-    }
 }

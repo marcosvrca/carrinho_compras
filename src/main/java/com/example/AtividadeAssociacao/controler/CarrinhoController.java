@@ -41,5 +41,27 @@ public class CarrinhoController {
         response.put("message", "Produto adicionado ao carrinho!");
         return response;
     }
+
+    @PostMapping("/atualizar-carrinho")
+    public Map<String, Object> atualizarCarrinho(
+            @RequestParam Long produtoId,
+            @RequestParam int quantidade) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        Produto produto = produtoRepository.buscarPorId(produtoId);
+
+        if (produto == null) {
+            response.put("success", false);
+            response.put("message", "Produto não encontrado");
+            return response;
+        }
+
+        carrinhoSession.getCarrinho().atualizarItem(produto, quantidade);
+
+        response.put("success", true);
+        response.put("message", "Quantidade atualizada!");
+        return response;
+    }
 }
 

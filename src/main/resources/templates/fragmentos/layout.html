@@ -33,22 +33,5 @@
         });
     })();
 </script>
-<script>
-    function atualizarContadorCarrinho() {
-        fetch('/api/cart/item-count')
-            .then(response => response.json())
-            .then(data => {
-                const span = document.getElementById('cart-item-count');
-                if (span) {
-                    span.innerText = data.count;
-                }
-            })
-            .catch(err => console.error('Erro ao atualizar carrinho', err));
-    }
-
-    // Atualiza automaticamente ao carregar qualquer página
-    document.addEventListener('DOMContentLoaded', atualizarContadorCarrinho);
-</script>
-
 </body>
 </html>

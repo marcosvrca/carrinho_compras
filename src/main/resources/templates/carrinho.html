@@ -31,10 +31,13 @@
             <tr th:each="item, itemStat : ${carrinho.itens}">
                 <td th:text="${item.produto.descricao}"></td>
                 <td>
-                    <form th:action="@{/produtos/atualizar-carrinho}" method="post" style="display: inline;">
-                        <input type="hidden" name="produtoId" th:value="${item.produto.id}" />
-                        <input type="number" name="quantidade" th:value="${item.quantidade}" min="0" class="form-control" style="width: 80px;" onchange="this.form.submit();"/>
-                    </form>
+                    <div class="quantity-widget" th:data-produto-id="${item.produto.id}">
+                        <div class="input-group" style="width: 120px;">
+                            <button class="btn btn-outline-secondary btn-sm quantity-minus">-</button>
+                            <input type="text" class="form-control text-center quantity" th:value="${item.quantidade}" readonly />
+                            <button class="btn btn-outline-secondary btn-sm quantity-plus">+</button>
+                        </div>
+                    </div>
                 </td>
                 <td th:text="${#numbers.formatCurrency(item.produto.valor)}"></td>
                 <td th:text="${#numbers.formatCurrency(item.produto.valor * item.quantidade)}"></td>

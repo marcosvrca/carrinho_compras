@@ -47,7 +47,8 @@ public class SecurityConfig {
                         
                         // Rotas de produtos e API do carrinho acessíveis a todos
                         .requestMatchers("/produtos", "/produtos/adicionar-ao-carrinho", "/produtos/carrinho",
-                                "/produtos/detail/**", "/api/cart/item-count")
+                                "/produtos/detail/**", "/api/cart/item-count", "/produtos/atualizar-carrinho",
+                                "/produtos/remover-do-carrinho/**")
                         .permitAll()
 
                         // ADMIN para produtos sensíveis
