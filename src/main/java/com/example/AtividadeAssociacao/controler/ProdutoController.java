@@ -9,8 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult; // Added import
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity; // Added import
+import org.springframework.http.HttpStatus; // Added import
 
+import java.util.HashMap; // Added import
 import java.util.List;
+import java.util.Map; // Added import
 
 @Controller
 @RequestMapping("/produtos")
@@ -90,17 +94,6 @@ public class ProdutoController {
         return "redirect:/produtos/config";
     }
 
-    @PostMapping("/adicionar-ao-carrinho")
-    public String adicionarAoCarrinho(@RequestParam("produtoId") Long produtoId, @RequestParam("quantidade") int quantidade) {
-        Produto produto = produtoRepository.buscarPorId(produtoId);
-        if (produto != null) {
-            ItemVenda item = new ItemVenda();
-            item.setProduto(produto);
-            item.setQuantidade(quantidade);
-            carrinhoSession.getCarrinho().adicionarItem(item);
-        }
-        return "redirect:/produtos";
-    }
 
     @GetMapping("/carrinho")
     public String verCarrinho(Model model) {

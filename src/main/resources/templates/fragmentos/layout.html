@@ -3,14 +3,20 @@
       xmlns:th="http://www.thymeleaf.org"
       th:fragment="layout(head, main)">
 
-<head th:replace="${head}"></head>
+<head th:replace="${head}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 
 <body class="d-flex flex-column min-vh-100">
 <header th:replace="~{fragmentos/header :: header}"></header>
 
 <main class="flex-grow-1" th:replace="${main}"></main>
 
+<div id="toast-container" class="toast-container"></div>
+
 <footer th:replace="~{fragmentos/footer :: footer}"></footer>
+
+<script th:src="@{/js/cart.js}"></script>
 
 <script>
     (() => {
@@ -26,6 +32,22 @@
             }, false);
         });
     })();
+</script>
+<script>
+    function atualizarContadorCarrinho() {
+        fetch('/api/cart/item-count')
+            .then(response => response.json())
+            .then(data => {
+                const span = document.getElementById('cart-item-count');
+                if (span) {
+                    span.innerText = data.count;
+                }
+            })
+            .catch(err => console.error('Erro ao atualizar carrinho', err));
+    }
+
+    // Atualiza automaticamente ao carregar qualquer página
+    document.addEventListener('DOMContentLoaded', atualizarContadorCarrinho);
 </script>
 
 </body>

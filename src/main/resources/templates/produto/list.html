@@ -30,7 +30,7 @@
                     <h5 class="card-title" th:text="${p.descricao}"></h5>
                     <p class="card-text" th:text="${#numbers.formatDecimal(p.valor, 2, 'COMMA', 2, 'POINT')}"></p>
                     <div class="d-flex justify-content-between align-items-center">
-                        <form th:action="@{/produtos/adicionar-ao-carrinho}" method="post" style="display: inline;">
+                        <form class="add-to-cart-form" th:action="@{/produtos/adicionar-ao-carrinho}" method="post" style="display: inline;">
                             <input type="hidden" name="produtoId" th:value="${p.id}" />
                             <div class="input-group">
                                 <input type="number" name="quantidade" value="1" min="1" class="form-control" style="width: 60px;">
