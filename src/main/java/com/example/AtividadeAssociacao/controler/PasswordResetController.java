@@ -1,5 +1,3 @@
-package com.example.AtividadeAssociacao.controler;
-
 import com.example.AtividadeAssociacao.model.Pessoa.Pessoa;
 import com.example.AtividadeAssociacao.repository.PessoaRepository;
 import com.example.AtividadeAssociacao.service.PessoaService;

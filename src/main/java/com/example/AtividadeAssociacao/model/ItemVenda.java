@@ -14,7 +14,7 @@ public class ItemVenda {
     private Integer quantidade;
 
     // pertence a um produto
-    @ManyToOne(optional = false) //  um ItemVenda precisa ter Produto e Venda
+    @ManyToOne(fetch = FetchType.EAGER, optional = false) //  um ItemVenda precisa ter Produto e Venda
     @JoinColumn(name = "id_produto")
     private Produto produto;
 
@@ -22,6 +22,15 @@ public class ItemVenda {
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_venda")
     private Venda venda;
+
+    public ItemVenda(Produto produto, int quantidade) {
+        this.produto = produto;
+        this.quantidade = quantidade;
+    }
+
+    public ItemVenda() {
+
+    }
 
     public BigDecimal total() {
         if (produto == null || produto.getValor() == null)

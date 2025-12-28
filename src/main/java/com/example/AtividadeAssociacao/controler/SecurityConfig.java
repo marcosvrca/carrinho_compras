@@ -42,9 +42,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         // Abertos ao público
                         .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**",
-                                "/forgot-password", "/reset-password", "/produtos",
-                                "/produtos/adicionar-ao-carrinho", "/produtos/carrinho",
-                                "/clientes/form", "/clientes/novo", "/clientes/salvar")
+                                "/forgot-password", "/reset-password", "/clientes/form", "/clientes/novo", "/clientes/salvar")
+                        .permitAll()
+                        
+                        // Rotas de produtos acessíveis a todos (incluindo adicionar ao carrinho e ver carrinho)
+                        .requestMatchers("/produtos", "/produtos/adicionar-ao-carrinho", "/produtos/carrinho",
+                                "/produtos/detail/**") // Assuming there's a product detail page
                         .permitAll()
 
                         // ADMIN para produtos sensíveis
