@@ -11,27 +11,33 @@
 
     <div class="row">
         <!-- Sidebar de Departamentos -->
-        <div class="col-md-3">
-            <div class="card bg-dark text-white mb-4">
-                <div class="card-header">
-                    Departamentos
+                <div class="col-md-3">
+                    <div class="card bg-dark text-white mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            Departamentos
+                            <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#departamentosCollapse" aria-expanded="false"
+                                    aria-controls="departamentosCollapse">
+                                <span class="bi bi-chevron-down"></span>
+                            </button>
+                        </div>
+                        <div class="collapse" id="departamentosCollapse" th:classappend="${departamentoId != null} ? 'show' : ''">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-dark text-white"
+                                    th:classappend="${departamentoId == null} ? 'active' : ''">
+                                    <a th:href="@{/produtos(nome=${nome})}" class="text-decoration-none"
+                                       th:classappend="${departamentoId == null} ? 'text-primary' : 'text-white'">Todos</a>
+                                </li>
+                                <li class="list-group-item bg-dark text-white" th:each="dep : ${departamentos}"
+                                    th:classappend="${departamentoId == dep.id} ? 'active' : ''">
+                                    <a th:href="@{/produtos(departamentoId=${dep.id}, nome=${nome})}" class="text-decoration-none"
+                                       th:classappend="${departamentoId == dep.id} ? 'text-primary' : 'text-white'"
+                                       th:text="${dep.nome}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-dark text-white"
-                        th:classappend="${departamentoId == null} ? 'active' : ''">
-                        <a th:href="@{/produtos(nome=${nome})}" class="text-decoration-none"
-                           th:classappend="${departamentoId == null} ? 'text-primary' : 'text-white'">Todos</a>
-                    </li>
-                    <li class="list-group-item bg-dark text-white" th:each="dep : ${departamentos}"
-                        th:classappend="${departamentoId == dep.id} ? 'active' : ''">
-                        <a th:href="@{/produtos(departamentoId=${dep.id}, nome=${nome})}" class="text-decoration-none"
-                           th:classappend="${departamentoId == dep.id} ? 'text-primary' : 'text-white'"
-                           th:text="${dep.nome}"></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
         <!-- Listagem de Produtos -->
         <div class="col-md-9">
             <form th:action="@{/produtos}" method="get" class="mb-4">
