@@ -73,6 +73,21 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/produtos(page=${currentPage - 1}, size=${pageSize}, nome=${nome}, departamentoId=${departamentoId})}">Anterior</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/produtos(page=${i}, size=${pageSize}, nome=${nome}, departamentoId=${departamentoId})}" th:text="${i + 1}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/produtos(page=${currentPage + 1}, size=${pageSize}, nome=${nome}, departamentoId=${departamentoId})}">Próximo</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 

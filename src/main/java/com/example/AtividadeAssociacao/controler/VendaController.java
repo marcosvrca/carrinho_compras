@@ -64,7 +64,7 @@ public class VendaController {
         // The @ModelAttribute("venda") setupVenda() method already ensures a fresh Venda
         // Just provide necessary data for dropdowns
         model.addAttribute("clientes", pessoaRepository.findAll());
-        model.addAttribute("produtos", produtoRepository.findAll());
+        model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE)); // Get all products for selection
         return "venda/form";
     }
 
@@ -86,8 +86,7 @@ public class VendaController {
         }
 
         model.addAttribute("clientes", pessoaRepository.findAll());
-        model.addAttribute("produtos", produtoRepository.findAll());
-
+        model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE)); // Corrected
         return "venda/form";
     }
 
@@ -102,7 +101,7 @@ public class VendaController {
         }
 
         model.addAttribute("clientes", pessoaRepository.findAll());
-        model.addAttribute("produtos", produtoRepository.findAll());
+        model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE)); // Corrected
 
         return "venda/form";
     }

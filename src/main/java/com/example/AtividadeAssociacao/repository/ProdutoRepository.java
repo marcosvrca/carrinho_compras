@@ -22,29 +22,9 @@ public class ProdutoRepository {
         em.merge(produto);
     }
 
-    public List<Produto> findAll() {
-        return em.createQuery("SELECT p FROM Produto p", Produto.class).getResultList();
-    }
-
-    // ATUALIZAR
-    public Produto atualizar(Produto produto) {
-        return em.merge(produto);
-    }
-
     // BUSCAR POR ID
     public Produto buscarPorId(Long id) {
         return em.find(Produto.class, id);
-    }
-
-    // LISTAR TODOS
-    public List<Produto> listarTodos() {
-        return em.createQuery("SELECT p FROM Produto p", Produto.class)
-                .getResultList();
-    }
-
-    @Transactional
-    public void deleteAll() {
-        em.createQuery("DELETE FROM Produto").executeUpdate();
     }
 
     // REMOVER POR ID
@@ -55,7 +35,18 @@ public class ProdutoRepository {
         }
     }
 
-    public List<Produto> findByDescricaoContainingIgnoreCase(String descricao, Long departamentoId) {
+    public List<Produto> findAll(int page, int size) {
+        return em.createQuery("SELECT p FROM Produto p", Produto.class)
+                .setFirstResult(page * size)
+                .setMaxResults(size)
+                .getResultList();
+    }
+
+    public long countAll() {
+        return em.createQuery("SELECT COUNT(p) FROM Produto p", Long.class).getSingleResult();
+    }
+
+    public List<Produto> findByDescricaoContainingIgnoreCase(String descricao, Long departamentoId, int page, int size) {
         StringBuilder jpql = new StringBuilder("SELECT p FROM Produto p WHERE 1=1");
         if (descricao != null && !descricao.isEmpty()) {
             jpql.append(" AND LOWER(p.descricao) LIKE LOWER(CONCAT('%', :descricao, '%'))");
@@ -70,12 +61,40 @@ public class ProdutoRepository {
         if (departamentoId != null) {
             query.setParameter("departamentoId", departamentoId);
         }
-        return query.getResultList();
+        return query.setFirstResult(page * size)
+                .setMaxResults(size)
+                .getResultList();
     }
 
-    public List<Produto> findByDepartamentoId(Long departamentoId) {
+    public long countByDescricaoContainingIgnoreCase(String descricao, Long departamentoId) {
+        StringBuilder jpql = new StringBuilder("SELECT COUNT(p) FROM Produto p WHERE 1=1");
+        if (descricao != null && !descricao.isEmpty()) {
+            jpql.append(" AND LOWER(p.descricao) LIKE LOWER(CONCAT('%', :descricao, '%'))");
+        }
+        if (departamentoId != null) {
+            jpql.append(" AND p.departamento.id = :departamentoId");
+        }
+        Query query = em.createQuery(jpql.toString(), Long.class);
+        if (descricao != null && !descricao.isEmpty()) {
+            query.setParameter("descricao", descricao);
+        }
+        if (departamentoId != null) {
+            query.setParameter("departamentoId", departamentoId);
+        }
+        return (Long) query.getSingleResult();
+    }
+
+    public List<Produto> findByDepartamentoId(Long departamentoId, int page, int size) {
         return em.createQuery("SELECT p FROM Produto p WHERE p.departamento.id = :departamentoId", Produto.class)
                 .setParameter("departamentoId", departamentoId)
+                .setFirstResult(page * size)
+                .setMaxResults(size)
                 .getResultList();
+    }
+
+    public long countByDepartamentoId(Long departamentoId) {
+        return em.createQuery("SELECT COUNT(p) FROM Produto p WHERE p.departamento.id = :departamentoId", Long.class)
+                .setParameter("departamentoId", departamentoId)
+                .getSingleResult();
     }
 }

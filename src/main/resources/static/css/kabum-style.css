@@ -25,17 +25,75 @@ body {
     color: #ccc;
 }
 
+/* General Button Styles */
+.btn {
+    font-size: 0.875rem; /* Smaller font size */
+    padding: 0.5rem 1rem; /* Adjusted padding */
+    border-radius: 5px; /* Slightly rounded corners */
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
 .btn-primary {
     background-color: #f7931e;
     border-color: #f7931e;
     color: #fff;
-    font-weight: bold;
 }
 
 .btn-primary:hover {
     background-color: #e6830d;
     border-color: #e6830d;
+    color: #fff;
 }
+
+.btn-secondary {
+    background-color: #4a4a4a;
+    border-color: #4a4a4a;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #5a5a5a;
+    border-color: #5a5a5a;
+    color: #fff;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    color: #fff;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    color: #fff;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529; /* Darker text for contrast */
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+    color: #212529;
+}
+
 
 .header {
     background-color: #000;
@@ -68,4 +126,33 @@ body {
     border-color: #f7931e;
     color: #fff;
     box-shadow: 0 0 0 0.2rem rgba(247, 147, 30, 0.25);
+}
+
+/* Pagination styles */
+.page-item .page-link {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #f7931e;
+}
+
+.page-item.active .page-link {
+    background-color: #f7931e;
+    border-color: #f7931e;
+    color: #000;
+}
+
+.page-item .page-link:hover {
+    background-color: #e6830d;
+    border-color: #e6830d;
+    color: #000;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+}
+
+/* Quantity widget buttons */
+.quantity-widget .btn {
+    padding: 0.25rem 0.5rem; /* Smaller padding for +/- buttons */
+    font-size: 0.75rem; /* Smaller font size */
 }
