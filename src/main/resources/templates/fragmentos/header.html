@@ -1,7 +1,7 @@
 <header th:fragment="header"
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm w-100">
+    <nav class="navbar navbar-expand-lg navbar-dark header shadow-sm w-100">
 
         <div class="container-fluid px-4">
 
@@ -89,7 +89,7 @@
 
                     <!-- CARRINHO (sempre visível) -->
                     <li class="nav-item">
-                        <a class="btn btn-success btn-sm"
+                        <a class="btn btn-primary btn-sm"
                            th:href="@{/produtos/carrinho}">
                             🛒 Carrinho <span id="cart-item-count" class="badge bg-light text-dark">0</span>
                         </a>
