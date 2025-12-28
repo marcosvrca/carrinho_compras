@@ -45,9 +45,9 @@ public class SecurityConfig {
                                 "/forgot-password", "/reset-password", "/clientes/form", "/clientes/novo", "/clientes/salvar")
                         .permitAll()
                         
-                        // Rotas de produtos acessíveis a todos (incluindo adicionar ao carrinho e ver carrinho)
+                        // Rotas de produtos e API do carrinho acessíveis a todos
                         .requestMatchers("/produtos", "/produtos/adicionar-ao-carrinho", "/produtos/carrinho",
-                                "/produtos/detail/**") // Assuming there's a product detail page
+                                "/produtos/detail/**", "/api/cart/item-count")
                         .permitAll()
 
                         // ADMIN para produtos sensíveis
