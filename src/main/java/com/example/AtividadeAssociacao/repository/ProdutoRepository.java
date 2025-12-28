@@ -55,9 +55,27 @@ public class ProdutoRepository {
         }
     }
 
-    public List<Produto> findByDescricaoContainingIgnoreCase(String descricao) {
-        Query query = em.createQuery("SELECT p FROM Produto p WHERE LOWER(p.descricao) LIKE LOWER(CONCAT('%', :descricao, '%'))", Produto.class);
-        query.setParameter("descricao", descricao);
+    public List<Produto> findByDescricaoContainingIgnoreCase(String descricao, Long departamentoId) {
+        StringBuilder jpql = new StringBuilder("SELECT p FROM Produto p WHERE 1=1");
+        if (descricao != null && !descricao.isEmpty()) {
+            jpql.append(" AND LOWER(p.descricao) LIKE LOWER(CONCAT('%', :descricao, '%'))");
+        }
+        if (departamentoId != null) {
+            jpql.append(" AND p.departamento.id = :departamentoId");
+        }
+        Query query = em.createQuery(jpql.toString(), Produto.class);
+        if (descricao != null && !descricao.isEmpty()) {
+            query.setParameter("descricao", descricao);
+        }
+        if (departamentoId != null) {
+            query.setParameter("departamentoId", departamentoId);
+        }
         return query.getResultList();
+    }
+
+    public List<Produto> findByDepartamentoId(Long departamentoId) {
+        return em.createQuery("SELECT p FROM Produto p WHERE p.departamento.id = :departamentoId", Produto.class)
+                .setParameter("departamentoId", departamentoId)
+                .getResultList();
     }
 }

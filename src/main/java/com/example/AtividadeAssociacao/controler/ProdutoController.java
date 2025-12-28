@@ -2,7 +2,9 @@ package com.example.AtividadeAssociacao.controler;
 
 import com.example.AtividadeAssociacao.model.ItemVenda;
 import com.example.AtividadeAssociacao.model.Produto;
+import com.example.AtividadeAssociacao.model.Departamento;
 import com.example.AtividadeAssociacao.repository.ProdutoRepository;
+import com.example.AtividadeAssociacao.repository.DepartamentoRepository;
 import jakarta.validation.Valid; // Added import
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,20 +26,29 @@ public class ProdutoController {
     private ProdutoRepository produtoRepository;
 
     @Autowired
+    private DepartamentoRepository departamentoRepository; // Inject DepartamentoRepository
+
+    @Autowired
     private CarrinhoSession carrinhoSession;
 
     // LISTAR TODOS E FILTRAR POR NOME
     @GetMapping
-    public String listar(@RequestParam(required = false) String nome, Model model) {
+    public String listar(@RequestParam(required = false) String nome,
+                         @RequestParam(required = false) Long departamentoId,
+                         Model model) {
         List<Produto> produtos;
-        if (nome != null && !nome.isEmpty()) {
-            produtos = produtoRepository.findByDescricaoContainingIgnoreCase(nome);
+        if (departamentoId != null) {
+            produtos = produtoRepository.findByDepartamentoId(departamentoId);
+        } else if (nome != null && !nome.isEmpty()) {
+            produtos = produtoRepository.findByDescricaoContainingIgnoreCase(nome, departamentoId); // Pass departamentoId here
         } else {
             produtos = produtoRepository.findAll();
         }
         model.addAttribute("produtos", produtos);
         model.addAttribute("carrinho", carrinhoSession.getCarrinho());
         model.addAttribute("nome", nome);
+        model.addAttribute("departamentos", departamentoRepository.findAll()); // Add all departments to the model
+        model.addAttribute("departamentoId", departamentoId); // Add selected department ID
         return "produto/list";
     }
 
@@ -45,7 +56,7 @@ public class ProdutoController {
     public String config(@RequestParam(required = false) String nome, Model model) {
         List<Produto> produtos;
         if (nome != null && !nome.isEmpty()) {
-            produtos = produtoRepository.findByDescricaoContainingIgnoreCase(nome);
+            produtos = produtoRepository.findByDescricaoContainingIgnoreCase(nome, null); // Use new method signature
         } else {
             produtos = produtoRepository.findAll();
         }
@@ -58,6 +69,7 @@ public class ProdutoController {
     @GetMapping("/novo")
     public String novo(Model model) {
         model.addAttribute("produto", new Produto());
+        model.addAttribute("departamentos", departamentoRepository.findAll()); // Add all departments to the model
         return "produto/form"; // página form.html
     }
 
@@ -67,6 +79,7 @@ public class ProdutoController {
 
         if (result.hasErrors()) {
             model.addAttribute("produto", produto); // Return the object with errors
+            model.addAttribute("departamentos", departamentoRepository.findAll()); // Re-add departments on error
             return "produto/form";
         }
 
@@ -84,6 +97,7 @@ public class ProdutoController {
     public String editar(@PathVariable Long id, Model model) {
         Produto produto = produtoRepository.buscarPorId(id);
         model.addAttribute("produto", produto);
+        model.addAttribute("departamentos", departamentoRepository.findAll()); // Add all departments to the model
         return "produto/form";
     }
 

@@ -36,6 +36,15 @@
             <div class="invalid-feedback" th:errors="*{imageUrl}">Informe a URL da imagem.</div>
         </div>
 
+        <div class="col-md-12">
+            <label for="departamento" class="form-label">Departamento:</label>
+            <select th:field="*{departamento}" class="form-control" id="departamento" required>
+                <option value="">Selecione um departamento</option>
+                <option th:each="dep : ${departamentos}" th:value="${dep.id}" th:text="${dep.nome}"></option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{departamento}">Selecione um departamento.</div>
+        </div>
+
         <div class="col-12">
             <button class="btn btn-success">Salvar</button>
             <a href="/produtos" class="btn btn-secondary">Cancelar</a>

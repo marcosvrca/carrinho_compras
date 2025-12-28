@@ -51,9 +51,10 @@ public class SecurityConfig {
                                 "/produtos/remover-do-carrinho/**")
                         .permitAll()
 
-                        // ADMIN para produtos sensíveis
+                        // ADMIN para produtos sensíveis e departamentos
                         .requestMatchers("/produtos/novo", "/produtos/editar/**",
-                                "/produtos/excluir/**", "/produtos/config")
+                                "/produtos/excluir/**", "/produtos/config",
+                                "/departamentos", "/departamentos/**")
                         .hasAuthority("ROLE_ADMIN")
 
                         // Usuário comum pode finalizar compra

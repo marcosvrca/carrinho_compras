@@ -30,6 +30,10 @@ public class Produto {
     @OneToMany(mappedBy = "produto")
     private List<ItemVenda> itens;
 
+    @ManyToOne
+    @JoinColumn(name = "departamento_id")
+    private Departamento departamento;
+
     public Long getId() {
         return id;
     }
@@ -64,6 +68,14 @@ public class Produto {
     }
     public void setItens(List<ItemVenda> itens) {
         this.itens = itens;
+    }
+
+    public Departamento getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(Departamento departamento) {
+        this.departamento = departamento;
     }
 
     @Override
