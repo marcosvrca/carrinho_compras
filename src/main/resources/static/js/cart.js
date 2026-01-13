@@ -13,7 +13,7 @@ function atualizarContadorCarrinho() {
 document.addEventListener('DOMContentLoaded', function() {
     atualizarContadorCarrinho();
 
-    // Toast notification function
+    // função Toast notification
     function showToast(message, type = 'success') {
         const toastContainer = document.getElementById('toast-container');
         if (!toastContainer) return;
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toast.classList.add('show');
         }, 100);
 
-        // Hide toast after 3 seconds
+        // esconder o toast depois 3 segundos
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => {
@@ -38,10 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
-    // Add to cart functionality
+    // função de adicionar no carrinho
     document.querySelectorAll('.add-to-cart-form').forEach(form => {
         form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault(); // Impedir o envio de formulário padrão
 
             const formData = new FormData(this);
 
@@ -54,15 +54,15 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => {
                 if (response.ok) {
-                    // Try to parse the response as JSON
+                    // Tente analisar a resposta como JSON
                     response.json().then(data => {
                         showToast(data.message || 'Item adicionado ao carrinho!', 'success');
                     }).catch(() => {
-                        // If parsing as JSON fails, just show a generic success message
+                        // Se a análise do JSON falhar, mostre uma mensagem genérica de sucesso
                         showToast('Item adicionado ao carrinho!', 'success');
                     });
 
-                    atualizarContadorCarrinho(); // Update the cart count
+                    atualizarContadorCarrinho(); // Atualizar a contagem do carrinho
                 } else {
                     response.json().then(data => {
                         showToast(data.message || 'Erro ao adicionar item ao carrinho.', 'error');
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Update quantity functionality
+    // Atualizar funcionalidade de quantidade
     function updateCartQuantity(produtoId, quantidade) {
         const formData = new FormData();
         formData.append('produtoId', produtoId);
@@ -95,24 +95,24 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success) {
                 if (quantidade === 0) {
-                    // Remove the item row if quantity is 0
+                    // Remova a linha do item se a quantidade for 0
                     const widget = document.querySelector(`.quantity-widget[data-produto-id='${produtoId}']`);
                     if (widget) {
                         widget.closest('tr').remove();
                     }
                 } else {
-                    // Update the quantity input
+                    //Atualizar a entrada de quantidade
                     const input = document.querySelector(`.quantity-widget[data-produto-id='${produtoId}'] .quantity`);
                     if (input) {
                         input.value = quantidade;
                     }
                 }
 
-                // Recalculate and update totals
+                // Recalcular e atualizar os totais
                 let total = 0;
                 document.querySelectorAll('.quantity-widget').forEach(widget => {
                     const priceString = widget.closest('tr').querySelector('td:nth-child(3)').textContent;
-                    // Remove R$, remove thousands separator '.', then replace decimal ',' with '.'
+                    // Remova R$, remova o separador de milhares '.', e substitua a vírgula decimal ',' por um ponto (.)
                     const price = parseFloat(priceString.replace('R$', '').replace(/\./g, '').replace(',', '.'));
                     const quantity = parseInt(widget.querySelector('.quantity').value);
                     const itemTotal = price * quantity;

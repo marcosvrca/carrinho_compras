@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus; // Import SessionStatus
-import org.springframework.format.annotation.DateTimeFormat; // Added import for DateTimeFormat
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/vendas")
-@SessionAttributes("venda") // Add this annotation
+@SessionAttributes("venda")
 public class VendaController {
 
     private final VendaRepository vendaRepository;
@@ -43,36 +43,36 @@ public class VendaController {
         this.carrinhoSession = carrinhoSession;
     }
 
-    @ModelAttribute("venda") // Initialize venda in session
+    @ModelAttribute("venda") //iniciando a venda na sessao
     public Venda setupVenda() {
         Venda venda = new Venda();
-        venda.setItens(new ArrayList<>()); // Ensure items list is not null
-        // Do not set cliente or data here, as they are selected/set later
+        venda.setItens(new ArrayList<>()); // Certifique-se de que a lista de itens não seja nula
+        // Não definir o cliente ou os dados aqui, pois eles serão selecionados/definidos posteriormente
         return venda;
     }
 
-    // ------------------------- LISTAR -------------------------
+    // listar
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("vendas", vendaRepository.findAll());
         return "list";
     }
 
-    // ------------------------- NOVA VENDA -------------------------
+    // nova venda
     @GetMapping("/novo")
     public String novo(Model model, @ModelAttribute("venda") Venda venda) {
-        // The @ModelAttribute("venda") setupVenda() method already ensures a fresh Venda
-        // Just provide necessary data for dropdowns
+        // O método setupVenda() do atributo @ModelAttribute("venda") já garante uma Venda atualizada
+        // Basta fornecer os dados necessários para os menus suspensos.
         model.addAttribute("clientes", pessoaRepository.findAll());
         model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE)); // Get all products for selection
         return "venda/form";
     }
 
-    // ------------------------- ADICIONAR ITEM -------------------------
+    // Adicionar Item
     @PostMapping("/addItem")
     public String addItem(@RequestParam Long produtoId,
                           @RequestParam Integer quantidade,
-                          @ModelAttribute("venda") Venda venda, // This 'venda' is from session
+                          @ModelAttribute("venda") Venda venda, // Esta 'venda' é da sessão
                           Model model) {
 
         Produto produto = produtoRepository.buscarPorId(produtoId);
@@ -81,7 +81,7 @@ public class VendaController {
             ItemVenda item = new ItemVenda();
             item.setProduto(produto);
             item.setQuantidade(quantidade);
-            item.setVenda(venda); // Associate item with the session-managed venda
+            item.setVenda(venda); // associa o item a session-maneged por sessao
             venda.getItens().add(item);
         }
 
@@ -90,10 +90,10 @@ public class VendaController {
         return "venda/form";
     }
 
-    // ------------------------- REMOVER ITEM -------------------------
+    //Remover item
     @GetMapping("/removeItem")
     public String removeItem(@RequestParam int index,
-                             @ModelAttribute("venda") Venda venda, // This 'venda' is from session
+                             @ModelAttribute("venda") Venda venda, // Esta 'venda' é da sessão
                              Model model) {
 
         if (index >= 0 && index < venda.getItens().size()) {
@@ -101,7 +101,7 @@ public class VendaController {
         }
 
         model.addAttribute("clientes", pessoaRepository.findAll());
-        model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE)); // Corrected
+        model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE));
 
         return "venda/form";
     }
@@ -109,25 +109,25 @@ public class VendaController {
     // ------------------------- SALVAR VENDA -------------------------
     @PostMapping("/salvar")
     public String salvar(@RequestParam Long clienteId,
-                         @ModelAttribute("venda") Venda venda, // This 'venda' is from session
-                         SessionStatus status) { // Inject SessionStatus
+                         @ModelAttribute("venda") Venda venda, // Esta 'venda' é da sessão
+                         SessionStatus status) { // Injetar SessionStatus
 
         Pessoa cliente = pessoaRepository.findById(clienteId);
         venda.setCliente(cliente);
-        // venda.setData(LocalDateTime.now()); // Removed - Date now comes from the form
+        // venda.setData(LocalDateTime.now()); // Removido - A data agora vem do formulário
 
-        // Ensure ItemVenda's venda field is set for persistence
+        // certificando de que o campo "venda" do ItemVenda esteja configurado para persistência
         for (ItemVenda item : venda.getItens()) {
             item.setVenda(venda);
         }
 
         vendaRepository.save(venda);
-        status.setComplete(); // Clear session attributes
+        status.setComplete(); // Limpa atributos da sessao
 
         return "redirect:/vendas";
     }
 
-    // --------------------------- DETALHES ---------------------------
+    //Detalhes
     @GetMapping("/{id}")
     public String detalhes(@PathVariable Long id, Model model) {
         Venda venda = vendaRepository.findById(id);
@@ -183,16 +183,16 @@ public class VendaController {
                                    Model model) {
         Pessoa cliente = pessoaRepository.findById(clientId);
         if (cliente == null) {
-            return "redirect:/clientes"; // Or handle error appropriately
+            return "redirect:/clientes";
         }
 
         List<Venda> vendas;
         if (inicio != null && fim != null) {
             LocalDateTime dataInicio = inicio.atStartOfDay();
             LocalDateTime dataFim = fim.atTime(LocalTime.MAX);
-            vendas = vendaRepository.findByClienteAndData(cliente, dataInicio, dataFim); // Corrected
+            vendas = vendaRepository.findByClienteAndData(cliente, dataInicio, dataFim);
         } else {
-            vendas = vendaRepository.findByCliente(cliente); // Corrected
+            vendas = vendaRepository.findByCliente(cliente);
         }
 
         model.addAttribute("cliente", cliente);
@@ -206,11 +206,10 @@ public class VendaController {
     @GetMapping("/minhas-compras")
     public String minhasCompras(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName(); // Get the username (email) of the logged-in user
+        String username = authentication.getName(); // Pega o nome de usuário (e-mail) do usuário conectado
 
         Pessoa cliente = pessoaRepository.findByEmail(username);
         if (cliente == null) {
-            // This should ideally not happen if user is authenticated and registered
             return "redirect:/login?error=clientNotFound";
         }
 
@@ -247,14 +246,14 @@ public class VendaController {
 
         List<ItemVenda> itensVenda = new ArrayList<>();
         for (ItemVenda carrinhoItem : carrinho.getItens()) {
-            // Re-fetch the product to ensure it's a managed entity
+            // Recupere o produto para garantir que seja uma entidade gerenciada
             Produto managedProduto = produtoRepository.buscarPorId(carrinhoItem.getProduto().getId());
 
             ItemVenda newItemVenda = new ItemVenda();
             newItemVenda.setId(null);
-            newItemVenda.setProduto(managedProduto); // Set the managed product
+            newItemVenda.setProduto(managedProduto);
             newItemVenda.setQuantidade(carrinhoItem.getQuantidade());
-            newItemVenda.setVenda(venda); // Associate with the new venda
+            newItemVenda.setVenda(venda);
             itensVenda.add(newItemVenda);
         }
         venda.setItens(itensVenda);
@@ -262,6 +261,6 @@ public class VendaController {
         vendaRepository.save(venda);
         carrinho.limpar();
 
-                return "venda/sucesso"; // Redirect to success page
+                return "venda/sucesso";
             }
         }

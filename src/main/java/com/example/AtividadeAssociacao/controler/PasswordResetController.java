@@ -23,15 +23,15 @@ public class PasswordResetController {
     private PessoaService pessoaService;
 
     @Autowired
-    private JavaMailSender mailSender; // Need to configure this bean
+    private JavaMailSender mailSender;
 
-    // Display "forgot password" form
+    // Exibir formulário "esqueci minha senha"
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm() {
-        return "forgot-password"; // This will be the name of the HTML template
+        return "forgot-password"; //Este será o nome do modelo HTML
     }
 
-    // Process "forgot password" request
+    //Processar solicitação de "esqueci minha senha"
     @PostMapping("/forgot-password")
     public String processForgotPasswordForm(@RequestParam("email") String userEmail, HttpServletRequest request, Model model) {
         Pessoa pessoa = pessoaRepository.findByEmail(userEmail);
@@ -44,7 +44,7 @@ public class PasswordResetController {
 
         String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
         SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-        passwordResetEmail.setFrom("no-reply@yourdomain.com"); // Configure your email sender
+        passwordResetEmail.setFrom("no-reply@yourdomain.com"); // Aqui vai o email
         passwordResetEmail.setTo(pessoa.getEmail());
         passwordResetEmail.setSubject("Redefinição de Senha");
         passwordResetEmail.setText("Para redefinir sua senha, clique no link abaixo:\n" + appUrl + "/reset-password?token=" + pessoa.getResetPasswordToken());
@@ -55,20 +55,20 @@ public class PasswordResetController {
         return "forgot-password";
     }
 
-    // Display "reset password" form
+    // Exibir o formulário "redefinir senha"
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
         Pessoa pessoa = pessoaService.findByResetPasswordToken(token);
-        if (pessoa == null || pessoa.getTokenCreationDate().plusHours(1).isBefore(LocalDateTime.now())) { // Token valid for 1 hour
+        if (pessoa == null || pessoa.getTokenCreationDate().plusHours(1).isBefore(LocalDateTime.now())) { // Token válido por 1 hora
             model.addAttribute("error", "O token é inválido ou expirou.");
             return "redirect:/login";
         }
 
         model.addAttribute("token", token);
-        return "reset-password"; // This will be the name of the HTML template
+        return "reset-password";
     }
 
-    // Process "reset password" request
+    //Processar solicitação de "redefinição de senha"
     @PostMapping("/reset-password")
     public String processResetPasswordForm(@RequestParam("token") String token,
                                            @RequestParam("password") String newPassword,
@@ -76,7 +76,7 @@ public class PasswordResetController {
                                            Model model) {
         if (!newPassword.equals(confirmPassword)) {
             model.addAttribute("error", "As senhas não coincidem.");
-            model.addAttribute("token", token); // Keep token in model to re-display form
+            model.addAttribute("token", token); // Manter o token no modelo para exibir o formulário novamente.
             return "reset-password";
         }
 

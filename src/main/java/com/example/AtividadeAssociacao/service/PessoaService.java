@@ -27,7 +27,7 @@ public class PessoaService {
     }
 
     public Pessoa findByResetPasswordToken(String token) {
-        // Implement this method in PessoaRepository
+        //recebendo o produto para garantir que seja uma entidade gerenciada
         return pessoaRepository.findByResetPasswordToken(token);
     }
 

@@ -1,6 +1,3 @@
--- ===============================
--- CLEAR EXISTING DATA AND RESET SEQUENCES (for H2 in-memory DB)
--- ===============================
 DELETE FROM tb_item_venda;
 DELETE FROM tb_venda;
 DELETE FROM tb_produto;

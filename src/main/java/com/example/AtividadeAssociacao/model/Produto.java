@@ -15,15 +15,15 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "A descrição do produto é obrigatória.") // Added validation
+    @NotBlank(message = "A descrição do produto é obrigatória.")
     private String descricao;
 
-    @NotNull(message = "O valor do produto é obrigatório.") // Added validation
-    @DecimalMin(value = "0.01", message = "O valor do produto deve ser maior que zero.") // Added validation
+    @NotNull(message = "O valor do produto é obrigatório.")
+    @DecimalMin(value = "0.01", message = "O valor do produto deve ser maior que zero.")
     private BigDecimal valor;
 
-    @Column(length = 512) // Increased length for image URL
-    @NotBlank(message = "A URL da imagem é obrigatória.") // Added validation
+    @Column(length = 512)
+    @NotBlank(message = "A URL da imagem é obrigatória.")
     private String imageUrl;
 
     // um pra muitos (itemvenda)

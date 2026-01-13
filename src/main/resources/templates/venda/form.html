@@ -121,8 +121,8 @@
                     hiddenQuantidade.value = quantidade;
                     form.appendChild(hiddenQuantidade);
 
-                    // Append existing venda details to maintain session model state
-                    // This is crucial for @SessionAttributes to work correctly
+                    // Anexa os detalhes do existingLearn para manter o estado do modelo de sessão
+                    // Isso é crucial para que @SessionAttributes funcione corretamente
                     var hiddenVendaId = document.createElement('input');
                     hiddenVendaId.type = 'hidden';
                     hiddenVendaId.name = 'id';

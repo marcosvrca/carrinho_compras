@@ -1,4 +1,4 @@
-/* KaBuM! Inspired Styles */
+/* Styles inspirado na Kabum */
 body {
     background-color: #1a1a1a;
     color: #fff;
@@ -25,11 +25,11 @@ body {
     color: #ccc;
 }
 
-/* General Button Styles */
+/* botoes geral */
 .btn {
-    font-size: 0.875rem; /* Smaller font size */
-    padding: 0.5rem 1rem; /* Adjusted padding */
-    border-radius: 5px; /* Slightly rounded corners */
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
     font-weight: bold;
     transition: all 0.2s ease-in-out;
 }
@@ -85,7 +85,7 @@ body {
 .btn-warning {
     background-color: #ffc107;
     border-color: #ffc107;
-    color: #212529; /* Darker text for contrast */
+    color: #212529; /* texto dark para contraste */
 }
 
 .btn-warning:hover {
@@ -128,7 +128,7 @@ body {
     box-shadow: 0 0 0 0.2rem rgba(247, 147, 30, 0.25);
 }
 
-/* Pagination styles */
+/* styles da paginação */
 .page-item .page-link {
     background-color: #2a2a2a;
     border-color: #3a3a3a;
@@ -151,8 +151,8 @@ body {
     color: #6c757d;
 }
 
-/* Quantity widget buttons */
+/* quantidade de intens botoes */
 .quantity-widget .btn {
-    padding: 0.25rem 0.5rem; /* Smaller padding for +/- buttons */
-    font-size: 0.75rem; /* Smaller font size */
+    padding: 0.25rem 0.5rem; /* padding +/- buttons */
+    font-size: 0.75rem; /* font size */
 }

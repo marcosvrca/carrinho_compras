@@ -26,7 +26,7 @@ public class ProdutoController {
     private ProdutoRepository produtoRepository;
 
     @Autowired
-    private DepartamentoRepository departamentoRepository; // Inject DepartamentoRepository
+    private DepartamentoRepository departamentoRepository;
 
     @Autowired
     private CarrinhoSession carrinhoSession;
@@ -61,18 +61,18 @@ public class ProdutoController {
         model.addAttribute("departamentoId", departamentoId);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("pageSize", size); // Pass size to maintain it in pagination links
+        model.addAttribute("pageSize", size); // Passar o tamanho para mantê-lo nos links de paginação.
         return "produto/list";
     }
 
     @GetMapping("/config")
     public String config(@RequestParam(required = false) String nome, Model model) {
         List<Produto> produtos;
-        // For config, we typically want to see all relevant products without pagination for management
+        // Para fins de configuração, geralmente queremos visualizar todos os produtos relevantes sem paginação para fins de gerenciamento.
         if (nome != null && !nome.isEmpty()) {
-            produtos = produtoRepository.findByDescricaoContainingIgnoreCase(nome, null, 0, Integer.MAX_VALUE); // Get all matching
+            produtos = produtoRepository.findByDescricaoContainingIgnoreCase(nome, null, 0, Integer.MAX_VALUE); //Pega todos os resultados.
         } else {
-            produtos = produtoRepository.findAll(0, Integer.MAX_VALUE); // Get all
+            produtos = produtoRepository.findAll(0, Integer.MAX_VALUE); // pega todos
         }
         model.addAttribute("produtos", produtos);
         model.addAttribute("nome", nome);
@@ -83,7 +83,7 @@ public class ProdutoController {
     @GetMapping("/novo")
     public String novo(Model model) {
         model.addAttribute("produto", new Produto());
-        model.addAttribute("departamentos", departamentoRepository.findAll()); // Add all departments to the model
+        model.addAttribute("departamentos", departamentoRepository.findAll()); // Adiciona todos os departamentos ao modelo.
         return "produto/form"; // página form.html
     }
 
@@ -92,12 +92,12 @@ public class ProdutoController {
     public String salvar(@Valid @ModelAttribute Produto produto, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
-            model.addAttribute("produto", produto); // Return the object with errors
-            model.addAttribute("departamentos", departamentoRepository.findAll()); // Re-add departments on error
+            model.addAttribute("produto", produto); //Retorna o objeto com erros.
+            model.addAttribute("departamentos", departamentoRepository.findAll()); // Adiciona novamente os departamentos em caso de erro
             return "produto/form";
         }
 
-        produtoRepository.salvar(produto); // Use salvar method
+        produtoRepository.salvar(produto); // Use o método salvar
 
         return "redirect:/produtos/config";
     }
@@ -107,14 +107,14 @@ public class ProdutoController {
     public String editar(@PathVariable Long id, Model model) {
         Produto produto = produtoRepository.buscarPorId(id);
         model.addAttribute("produto", produto);
-        model.addAttribute("departamentos", departamentoRepository.findAll()); // Add all departments to the model
+        model.addAttribute("departamentos", departamentoRepository.findAll()); // Adiciona todos os departamentos ao modelo.
         return "produto/form";
     }
 
     // EXCLUIR
     @GetMapping("/excluir/{id}")
     public String excluir(@PathVariable Long id) {
-        produtoRepository.remover(id); // Use remover method
+        produtoRepository.remover(id); // Use metodo remover
         return "redirect:/produtos/config";
     }
 

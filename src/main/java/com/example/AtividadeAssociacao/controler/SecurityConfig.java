@@ -30,8 +30,8 @@ public class SecurityConfig {
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        // Configure mailSender properties (host, port, username, password, etc.)
-        // These can be loaded from application.properties or application.yml
+        // configurar as propriedades do remetente de e-mail (host, porta, nome de usuário, senha, etc.)
+        // Essas propriedades podem ser carregadas de application.properties ou application.yml
         return mailSender;
     }
 

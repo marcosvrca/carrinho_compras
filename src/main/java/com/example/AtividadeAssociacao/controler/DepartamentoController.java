@@ -47,7 +47,7 @@ public class DepartamentoController {
         if (departamento.getId() == null) {
             departamentoRepository.save(departamento);
         } else {
-            departamentoRepository.save(departamento); // JpaRepository save handles update if ID exists
+            departamentoRepository.save(departamento); // O método save do JpaRepository lida com atualizações se o ID existir
         }
 
         return "redirect:/departamentos";

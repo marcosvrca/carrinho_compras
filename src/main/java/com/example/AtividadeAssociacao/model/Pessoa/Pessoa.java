@@ -18,17 +18,17 @@ public abstract class Pessoa {
     private Long id;
 
     @Column(unique = true)
-    @NotBlank(message = "O e-mail é obrigatório.") // Added validation
-    @Email(message = "O e-mail deve ser válido.") // Added validation
+    @NotBlank(message = "O e-mail é obrigatório.")
+    @Email(message = "O e-mail deve ser válido.")
     private String email;
 
-    @NotBlank(message = "O telefone é obrigatório.") // Added validation
+    @NotBlank(message = "O telefone é obrigatório.")
     private String telefone;
 
-    @NotBlank(message = "A senha é obrigatória.") // Added validation
+    @NotBlank(message = "A senha é obrigatória.")
     private String password;
 
-    @NotNull(message = "A role é obrigatória.") // Added validation
+    @NotNull(message = "A role é obrigatória.")
     private String role;
 
     @Column(name = "reset_password_token")
