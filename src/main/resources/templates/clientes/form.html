@@ -11,108 +11,146 @@
 
     <div class="card shadow-lg border-0">
         <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-            <h4 class="mb-0" th:text="${pessoa.id != null ? '✏️ Editar Cliente' : '➕ Novo Cliente'}"></h4>
+            <h4 class="mb-0"
+                th:text="${pessoa.id != null ? '✏️ Editar Cliente' : '➕ Novo Cliente'}"></h4>
             <span th:text="${tipo == 'FISICA' ? 'Pessoa Física' : 'Pessoa Jurídica'}"
                   class="badge bg-light text-primary fs-6"></span>
         </div>
 
         <div class="card-body">
             <form th:action="${pessoa.id != null} ? @{/clientes/atualizar} : @{/clientes/salvar}"
-                  method="post" class="row g-3 needs-validation" novalidate>
+                  th:object="${pessoa}"
+                  method="post"
+                  class="row g-3 needs-validation"
+                  novalidate>
 
-                <input type="hidden" name="id" th:value="${pessoa.id}"/>
+                <input type="hidden" th:field="*{id}"/>
                 <input type="hidden" name="tipo" th:value="${tipo}"/>
 
+                <!-- ================= PESSOA FÍSICA ================= -->
                 <div th:if="${tipo == 'FISICA'}">
                     <div class="row">
+
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Nome Completo</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-person-badge"></i></span>
-                                <input type="text" class="form-control" name="nome"
-                                       th:value="${pessoa.nome}"
-                                       th:classappend="${#fields.hasErrors('pessoa.nome')} ? 'is-invalid' : ''"
-                                       placeholder="Digite o nome completo" required/>
-                                <div class="invalid-feedback" th:errors="${pessoa.nome}"></div>
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-person-badge"></i>
+                                </span>
+                                <input type="text"
+                                       th:field="*{nome}"
+                                       class="form-control"
+                                       th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid' : ''"
+                                       placeholder="Digite o nome completo"/>
+                                <div class="invalid-feedback" th:errors="*{nome}"></div>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">CPF</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-card-text"></i></span>
-                                <input type="text" class="form-control" name="cpf"
-                                       th:value="${pessoa.cpf}"
-                                       th:classappend="${#fields.hasErrors('pessoa.cpf')} ? 'is-invalid' : ''"
-                                       placeholder="Digite o CPF" required/>
-                                <div class="invalid-feedback" th:errors="${pessoa.cpf}"></div>
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-card-text"></i>
+                                </span>
+                                <input type="text"
+                                       th:field="*{cpf}"
+                                       class="form-control"
+                                       th:classappend="${#fields.hasErrors('cpf')} ? 'is-invalid' : ''"
+                                       placeholder="Digite o CPF"/>
+                                <div class="invalid-feedback" th:errors="*{cpf}"></div>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
+                <!-- ================= PESSOA JURÍDICA ================= -->
                 <div th:if="${tipo == 'JURIDICA'}">
                     <div class="row">
+
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Razão Social</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-building"></i></span>
-                                <input type="text" class="form-control" name="razaoSocial"
-                                       th:value="${pessoa.razaoSocial}"
-                                       th:classappend="${#fields.hasErrors('pessoa.razaoSocial')} ? 'is-invalid' : ''"
-                                       placeholder="Digite a razão social" required/>
-                                <div class="invalid-feedback" th:errors="${pessoa.razaoSocial}"></div>
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-building"></i>
+                                </span>
+                                <input type="text"
+                                       th:field="*{razaoSocial}"
+                                       class="form-control"
+                                       th:classappend="${#fields.hasErrors('razaoSocial')} ? 'is-invalid' : ''"
+                                       placeholder="Digite a razão social"/>
+                                <div class="invalid-feedback" th:errors="*{razaoSocial}"></div>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">CNPJ</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-card-list"></i></span>
-                                <input type="text" class="form-control" name="cnpj"
-                                       th:value="${pessoa.cnpj}"
-                                       th:classappend="${#fields.hasErrors('pessoa.cnpj')} ? 'is-invalid' : ''"
-                                       placeholder="Digite o CNPJ" required/>
-                                <div class="invalid-feedback" th:errors="${pessoa.cnpj}"></div>
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-card-list"></i>
+                                </span>
+                                <input type="text"
+                                       th:field="*{cnpj}"
+                                       class="form-control"
+                                       th:classappend="${#fields.hasErrors('cnpj')} ? 'is-invalid' : ''"
+                                       placeholder="Digite o CNPJ"/>
+                                <div class="invalid-feedback" th:errors="*{cnpj}"></div>
                             </div>
                         </div>
+
                     </div>
                 </div>
+
+                <!-- ================= CAMPOS COMUNS ================= -->
 
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">E-mail</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
-                        <input type="email" class="form-control" name="email"
-                               th:value="${pessoa.email}"
-                               th:classappend="${#fields.hasErrors('pessoa.email')} ? 'is-invalid' : ''"
-                               placeholder="exemplo@email.com" required/>
-                        <div class="invalid-feedback" th:errors="${pessoa.email}"></div>
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+                        <input type="email"
+                               th:field="*{email}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                               placeholder="exemplo@email.com"/>
+                        <div class="invalid-feedback" th:errors="*{email}"></div>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Telefone</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-light"><i class="bi bi-telephone"></i></span>
-                        <input type="text" class="form-control" name="telefone"
-                               th:value="${pessoa.telefone}"
-                               th:classappend="${#fields.hasErrors('pessoa.telefone')} ? 'is-invalid' : ''"
-                               placeholder="(99) 99999-9999" required/>
-                        <div class="invalid-feedback" th:errors="${pessoa.telefone}"></div>
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-telephone"></i>
+                        </span>
+                        <input type="text"
+                               th:field="*{telefone}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('telefone')} ? 'is-invalid' : ''"
+                               placeholder="(99) 99999-9999"/>
+                        <div class="invalid-feedback" th:errors="*{telefone}"></div>
                     </div>
                 </div>
+
+                <!-- ================= SENHA (APENAS NOVO CADASTRO) ================= -->
 
                 <div class="col-md-6" th:if="${pessoa.id == null}">
                     <label class="form-label fw-semibold">Senha</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
-                        <input type="password" class="form-control" name="password"
-                               th:classappend="${#fields.hasErrors('pessoa.password')} ? 'is-invalid' : ''"
-                               placeholder="Digite sua senha" required/>
-                        <div class="invalid-feedback" th:errors="${pessoa.password}"></div>
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-lock"></i>
+                        </span>
+                        <input type="password"
+                               th:field="*{password}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                               placeholder="Digite sua senha"/>
+                        <div class="invalid-feedback" th:errors="*{password}"></div>
                     </div>
                 </div>
+
+                <!-- ================= AÇÕES ================= -->
 
                 <div class="col-12 mt-4 d-flex justify-content-between">
                     <a href="/clientes" class="btn btn-secondary">
@@ -122,6 +160,7 @@
                         💾 Salvar
                     </button>
                 </div>
+
             </form>
         </div>
     </div>

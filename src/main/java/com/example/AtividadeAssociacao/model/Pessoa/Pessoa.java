@@ -25,10 +25,10 @@ public abstract class Pessoa {
     @NotBlank(message = "O telefone é obrigatório.")
     private String telefone;
 
-    @NotBlank(message = "A senha é obrigatória.")
+    @Column(nullable = false)
     private String password;
 
-    @NotNull(message = "A role é obrigatória.")
+    @Column(nullable = false)
     private String role;
 
     @Column(name = "reset_password_token")

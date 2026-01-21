@@ -11,14 +11,14 @@ ALTER TABLE tb_departamento ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE tb_produto ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE tb_venda ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE tb_item_venda ALTER COLUMN id RESTART WITH 1;
-
+ALTER SEQUENCE tb_pessoa_seq RESTART WITH 5;
 
 -- ===============================
 -- PESSOAS
 -- ===============================
 
 INSERT INTO tb_pessoa (id, email, telefone, password, role)
-VALUES (1, 'joao@email.com', '9999-9999',
+VALUES (default, 'joao@email.com', '9999-9999',
         '$2a$10$7EqJtq98hPqEX7fNZaFWoOa3P5xLrZJjF8EwF0lF6Z6MZlZQ4E8xC',
         'ROLE_USER');
 

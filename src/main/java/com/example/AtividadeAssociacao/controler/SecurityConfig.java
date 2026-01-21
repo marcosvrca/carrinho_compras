@@ -11,9 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher; // Added import
-import org.springframework.mail.javamail.JavaMailSender; // Added import
-import org.springframework.mail.javamail.JavaMailSenderImpl; // Added import
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -30,46 +30,69 @@ public class SecurityConfig {
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        // configurar as propriedades do remetente de e-mail (host, porta, nome de usuário, senha, etc.)
-        // Essas propriedades podem ser carregadas de application.properties ou application.yml
         return mailSender;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        // Abertos ao público
-                        .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**",
-                                "/forgot-password", "/reset-password", "/clientes/form", "/clientes/novo", "/clientes/salvar")
-                        .permitAll()
-                        
-                        // Rotas de produtos e API do carrinho acessíveis a todos
-                        .requestMatchers("/produtos", "/produtos/adicionar-ao-carrinho", "/produtos/carrinho",
-                                "/produtos/detail/**", "/api/cart/item-count", "/produtos/atualizar-carrinho",
-                                "/produtos/remover-do-carrinho/**")
-                        .permitAll()
 
-                        // ADMIN para produtos sensíveis e departamentos
-                        .requestMatchers("/produtos/novo", "/produtos/editar/**",
-                                "/produtos/excluir/**", "/produtos/config",
-                                "/departamentos", "/departamentos/**")
-                        .hasAuthority("ROLE_ADMIN")
+                        /* ================= ROTAS PÚBLICAS ================= */
+                        .requestMatchers(
+                                "/", "/home", "/login",
+                                "/css/**", "/js/**", "/images/**",
+                                "/forgot-password", "/reset-password",
 
-                        // Usuário comum pode finalizar compra
-                        .requestMatchers("/vendas/finalizar", "/vendas/minhas-compras")
-                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                                /* cadastro público */
+                                "/clientes/novo",
+                                "/clientes/salvar"
+                        ).permitAll()
 
-                        // Vendas que são administrativas
-                        .requestMatchers("/vendas/novo", "/vendas/addItem",
-                                "/vendas/removeItem", "/vendas/salvar")
-                        .hasAuthority("ROLE_ADMIN")
+                        /* ================= PRODUTOS (PÚBLICO) ================= */
+                        .requestMatchers(
+                                "/produtos",
+                                "/produtos/adicionar-ao-carrinho",
+                                "/produtos/carrinho",
+                                "/produtos/detail/**",
+                                "/api/cart/item-count",
+                                "/produtos/atualizar-carrinho",
+                                "/produtos/remover-do-carrinho/**"
+                        ).permitAll()
 
-                        // Todo o resto de /clientes/** é só admin
-                        .requestMatchers("/clientes/**").hasAuthority("ROLE_ADMIN")
+                        /* ================= ADMIN ================= */
+                        .requestMatchers(
+                                "/produtos/novo",
+                                "/produtos/editar/**",
+                                "/produtos/excluir/**",
+                                "/produtos/config",
+                                "/departamentos",
+                                "/departamentos/**"
+                        ).hasAuthority("ROLE_ADMIN")
 
-                        // Qualquer outro endpoint
+                        /* ================= VENDAS ================= */
+                        .requestMatchers(
+                                "/vendas/finalizar",
+                                "/vendas/minhas-compras"
+                        ).hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+
+                        .requestMatchers(
+                                "/vendas/novo",
+                                "/vendas/addItem",
+                                "/vendas/removeItem",
+                                "/vendas/salvar"
+                        ).hasAuthority("ROLE_ADMIN")
+
+                        /* ================= CLIENTES (ADMIN) ================= */
+                        .requestMatchers(
+                                "/clientes",
+                                "/clientes/editar/**",
+                                "/clientes/remover/**"
+                        ).hasAuthority("ROLE_ADMIN")
+
+                        /* ================= QUALQUER OUTRA ================= */
                         .anyRequest().authenticated()
                 )
 
@@ -78,8 +101,9 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/produtos", true)
                         .permitAll()
                 )
+
                 .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // Allow GET for /logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
@@ -91,8 +115,13 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+
+        authenticationManagerBuilder
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+
         return authenticationManagerBuilder.build();
     }
 }

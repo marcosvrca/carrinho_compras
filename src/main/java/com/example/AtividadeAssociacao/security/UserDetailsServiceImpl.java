@@ -1,4 +1,4 @@
-package com.example.AtividadeAssociacao.controler;
+package com.example.AtividadeAssociacao.security;
 
 import com.example.AtividadeAssociacao.model.Pessoa.Pessoa;
 import com.example.AtividadeAssociacao.repository.PessoaRepository;
