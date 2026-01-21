@@ -46,53 +46,29 @@ public class CadastroPessoaController {
     }
 
 
-    @PostMapping("/salvar")
-    public String salvar(@RequestParam String tipo,
-                         @RequestParam String nome,
-                         @RequestParam String cpfCnpj,
-                         @RequestParam String email,
-                         @RequestParam String telefone,
-                         @RequestParam String password,
-                         Model model) {
+    @PostMapping(value = "/salvar", params = "tipo=FISICA")
+    public String salvarFisica(@ModelAttribute PessoaFisica pessoa, BindingResult bindingResult, Model model) {
+        return salvarPessoa(pessoa, "FISICA", bindingResult, model);
+    }
 
-        Pessoa pessoaToValidate;
+    @PostMapping(value = "/salvar", params = "tipo=JURIDICA")
+    public String salvarJuridica(@ModelAttribute PessoaJuridica pessoa, BindingResult bindingResult, Model model) {
+        return salvarPessoa(pessoa, "JURIDICA", bindingResult, model);
+    }
 
-        if (tipo.equalsIgnoreCase("FISICA")) {
-            PessoaFisica pf = new PessoaFisica();
-            pf.setNome(nome);
-            pf.setCpf(cpfCnpj);
-            pf.setEmail(email);
-            pf.setTelefone(telefone);
-            pf.setPassword(passwordEncoder.encode(password));
-            pf.setRole("ROLE_USER");
-            pessoaToValidate = pf;
-        } else { // JURIDICA
-            PessoaJuridica pj = new PessoaJuridica();
-            pj.setRazaoSocial(nome);
-            pj.setCnpj(cpfCnpj);
-            pj.setEmail(email);
-            pj.setTelefone(telefone);
-            pj.setPassword(passwordEncoder.encode(password));
-            pj.setRole("ROLE_USER");
-            pessoaToValidate = pj;
-        }
-
-        BindingResult bindingResult = new BeanPropertyBindingResult(pessoaToValidate, "pessoa");
-
-        validator.validate(pessoaToValidate, bindingResult);
+    private String salvarPessoa(Pessoa pessoa, String tipo, BindingResult bindingResult, Model model) {
+        validator.validate(pessoa, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("pessoa", pessoaToValidate);
-            model.addAttribute("tipo", tipo.toUpperCase());
+            model.addAttribute("pessoa", pessoa);
+            model.addAttribute("tipo", tipo);
             model.addAllAttributes(bindingResult.getModel());
             return "clientes/form";
         }
 
-        if (pessoaToValidate instanceof PessoaFisica) {
-            pessoaRepository.save((PessoaFisica) pessoaToValidate);
-        } else {
-            pessoaRepository.save((PessoaJuridica) pessoaToValidate);
-        }
+        pessoa.setPassword(passwordEncoder.encode(pessoa.getPassword()));
+        pessoa.setRole("ROLE_USER");
+        pessoaRepository.save(pessoa);
 
         return "redirect:/login";
     }
@@ -111,54 +87,27 @@ public class CadastroPessoaController {
         return "clientes/form";
     }
 
-    @PostMapping("/atualizar")
-    public String atualizar(@RequestParam Long id,
-                            @RequestParam String tipo,
-                            @RequestParam String nome,
-                            @RequestParam String cpfCnpj,
-                            @RequestParam String email,
-                            @RequestParam String telefone,
-                            Model model) {
+    @PostMapping(value = "/atualizar", params = "tipo=FISICA")
+    public String atualizarFisica(@ModelAttribute PessoaFisica pessoa, BindingResult bindingResult, Model model) {
+        return atualizarPessoa(pessoa, "FISICA", bindingResult, model);
+    }
 
-        Pessoa pessoa = pessoaRepository.findById(id);
-        if (pessoa == null) {
-            return "redirect:/clientes";
+    @PostMapping(value = "/atualizar", params = "tipo=JURIDICA")
+    public String atualizarJuridica(@ModelAttribute PessoaJuridica pessoa, BindingResult bindingResult, Model model) {
+        return atualizarPessoa(pessoa, "JURIDICA", bindingResult, model);
+    }
+
+    private String atualizarPessoa(Pessoa pessoa, String tipo, BindingResult bindingResult, Model model) {
+        validator.validate(pessoa, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("pessoa", pessoa);
+            model.addAttribute("tipo", tipo);
+            model.addAllAttributes(bindingResult.getModel());
+            return "clientes/form";
         }
 
-        if (tipo.equals("FISICA") && pessoa instanceof PessoaFisica pf) {
-            pf.setNome(nome);
-            pf.setCpf(cpfCnpj);
-            pf.setEmail(email);
-            pf.setTelefone(telefone);
-
-            BindingResult bindingResult = new BeanPropertyBindingResult(pf, "pessoa"); // Correct instantiation
-            validator.validate(pf, bindingResult);
-
-            if (bindingResult.hasErrors()) {
-                model.addAttribute("pessoa", pf);
-                model.addAttribute("tipo", "FISICA");
-                model.addAllAttributes(bindingResult.getModel());
-                return "clientes/form";
-            }
-            pessoaRepository.update(pf);
-        } else if (tipo.equals("JURIDICA") && pessoa instanceof PessoaJuridica pj) {
-            pj.setRazaoSocial(nome);
-            pj.setCnpj(cpfCnpj);
-            pj.setEmail(email);
-            pj.setTelefone(telefone);
-
-            BindingResult bindingResult = new BeanPropertyBindingResult(pj, "pessoa"); // Correct instantiation
-            validator.validate(pj, bindingResult);
-
-            if (bindingResult.hasErrors()) {
-                model.addAttribute("pessoa", pj);
-                model.addAttribute("tipo", "JURIDICA");
-                model.addAllAttributes(bindingResult.getModel());
-                return "clientes/form";
-            }
-            pessoaRepository.update(pj);
-        }
-
+        pessoaRepository.update(pessoa);
         return "redirect:/clientes";
     }
 

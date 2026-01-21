@@ -19,6 +19,7 @@ public class PessoaRepository {
     @Transactional
     public void save(Pessoa pessoa) {
         em.persist(pessoa);
+        em.flush();
     }
 
     public Pessoa findById(Long id) {
