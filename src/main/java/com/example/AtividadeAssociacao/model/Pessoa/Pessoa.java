@@ -14,7 +14,7 @@ public abstract class Pessoa {
     //Cada classe da hierarquia (Pessoa, PessoaFisica, PessoaJuridica) gera uma tabela própria no banco.
     //As tabelas de subclasses (tb_pessoa_fisica, tb_pessoa_juridica) possuem uma chave estrangeira (id) que referencia a tabela tb_pessoa.
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)

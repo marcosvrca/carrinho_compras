@@ -6,25 +6,22 @@ DELETE FROM tb_pessoa_fisica;
 DELETE FROM tb_pessoa_juridica;
 DELETE FROM tb_pessoa;
 
-ALTER TABLE tb_pessoa ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE tb_departamento ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE tb_produto ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE tb_venda ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE tb_item_venda ALTER COLUMN id RESTART WITH 1;
-ALTER SEQUENCE tb_pessoa_seq RESTART WITH 5;
+ALTER TABLE tb_pessoa ALTER COLUMN id RESTART WITH 5;
+ALTER TABLE tb_departamento ALTER COLUMN id RESTART WITH 16;
+ALTER TABLE tb_produto ALTER COLUMN id RESTART WITH 67;
+ALTER TABLE tb_venda ALTER COLUMN id RESTART WITH 3;
+ALTER TABLE tb_item_venda ALTER COLUMN id RESTART WITH 5;
 
 -- ===============================
 -- PESSOAS
 -- ===============================
-
 INSERT INTO tb_pessoa (id, email, telefone, password, role)
-VALUES (default, 'joao@email.com', '9999-9999',
+VALUES (1, 'joao@email.com', '9999-9999',
         '$2a$10$7EqJtq98hPqEX7fNZaFWoOa3P5xLrZJjF8EwF0lF6Z6MZlZQ4E8xC',
         'ROLE_USER');
 
 INSERT INTO tb_pessoa_fisica (id, nome, cpf)
 VALUES (1, 'João Silva', '12345678900');
-
 
 INSERT INTO tb_pessoa (id, email, telefone, password, role)
 VALUES (2, 'maria@email.com', '1111-9999',
@@ -33,7 +30,6 @@ VALUES (2, 'maria@email.com', '1111-9999',
 
 INSERT INTO tb_pessoa_fisica (id, nome, cpf)
 VALUES (2, 'Maria Joaquina', '12345678978');
-
 
 INSERT INTO tb_pessoa (id, email, telefone, password, role)
 VALUES (3, 'empresa@email.com', '8888-8888',
@@ -44,11 +40,12 @@ INSERT INTO tb_pessoa_juridica (id, razao_social, cnpj)
 VALUES (3, 'Tech Solutions Ltda', '1112223330001');
 
 INSERT INTO tb_pessoa (id, email, telefone, password, role)
-VALUES (4,'admin@admin.com','11999998888','$2a$10$2iy3DcqYknmfKS2PmpO.kOHwayn./YExIquR8SeuflbXcYFWX138u','ROLE_ADMIN');
+VALUES (4, 'admin@admin.com', '11999998888',
+        '$2a$10$2iy3DcqYknmfKS2PmpO.kOHwayn./YExIquR8SeuflbXcYFWX138u',
+        'ROLE_ADMIN');
 
 INSERT INTO tb_pessoa_fisica (id, nome, cpf)
 VALUES (4, 'Administrador', '04510018185');
-
 
 -- ===============================
 -- DEPARTAMENTOS
