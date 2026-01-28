@@ -1,10 +1,13 @@
 package com.example.AtividadeAssociacao.model.Pessoa;
 
+import com.example.AtividadeAssociacao.security.Role;
 import com.example.AtividadeAssociacao.model.Venda;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email; // Added import
 import jakarta.validation.constraints.NotBlank; // Added import
-import jakarta.validation.constraints.NotNull; // Added import
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_pessoa")
@@ -28,8 +31,13 @@ public abstract class Pessoa {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tb_pessoa_roles",
+            joinColumns = @JoinColumn(name = "pessoa_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roles = new ArrayList<>();
 
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
@@ -40,7 +48,6 @@ public abstract class Pessoa {
     // Um cliente pode ter várias vendas
     @OneToMany(mappedBy = "cliente")
     private java.util.List<Venda> vendas;
-
 
     public Long getId() {
         return id;
@@ -63,20 +70,21 @@ public abstract class Pessoa {
         this.telefone = telefone;
     }
 
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getResetPasswordToken() {
@@ -112,6 +120,5 @@ public abstract class Pessoa {
     }
 
     public abstract String getNome();
-
 
 }

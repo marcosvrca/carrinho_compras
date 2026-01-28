@@ -1,4 +1,4 @@
-package com.example.AtividadeAssociacao.model;
+package com.example.AtividadeAssociacao.security;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -55,4 +55,18 @@ public class Role implements GrantedAuthority {
     public void setPessoas(List<com.example.AtividadeAssociacao.model.Pessoa.Pessoa> pessoas) {
         this.pessoas = pessoas;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Role)) return false;
+        Role role = (Role) o;
+        return id != null && id.equals(role.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }

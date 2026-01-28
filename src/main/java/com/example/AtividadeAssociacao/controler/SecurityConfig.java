@@ -39,11 +39,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-
                         /* ================= ROTAS PÚBLICAS ================= */
                         .requestMatchers(
                                 "/", "/home", "/login",
-                                "/css/**", "/js/**", "/images/**",
+                                "/css/**", "/js/**", "/imagens/**",
                                 "/forgot-password", "/reset-password",
 
                                 /* cadastro público */

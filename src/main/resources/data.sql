@@ -1,3 +1,7 @@
+-- ===============================
+-- LIMPEZA (evita erro se rodar mais de uma vez)
+-- ===============================
+DELETE FROM tb_pessoa_roles;
 DELETE FROM tb_item_venda;
 DELETE FROM tb_venda;
 DELETE FROM tb_produto;
@@ -5,47 +9,79 @@ DELETE FROM tb_departamento;
 DELETE FROM tb_pessoa_fisica;
 DELETE FROM tb_pessoa_juridica;
 DELETE FROM tb_pessoa;
-
-ALTER TABLE tb_pessoa ALTER COLUMN id RESTART WITH 5;
-ALTER TABLE tb_departamento ALTER COLUMN id RESTART WITH 16;
-ALTER TABLE tb_produto ALTER COLUMN id RESTART WITH 67;
-ALTER TABLE tb_venda ALTER COLUMN id RESTART WITH 3;
-ALTER TABLE tb_item_venda ALTER COLUMN id RESTART WITH 5;
+DELETE FROM tb_role;
 
 -- ===============================
--- PESSOAS
+-- RESTART IDENTITY (H2)
 -- ===============================
-INSERT INTO tb_pessoa (id, email, telefone, password, role)
+ALTER TABLE tb_role ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE tb_pessoa ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE tb_departamento ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE tb_produto ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE tb_venda ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE tb_item_venda ALTER COLUMN id RESTART WITH 1;
+
+-- ===============================
+-- ROLES
+-- ===============================
+INSERT INTO tb_role (id, nome) VALUES (1, 'ROLE_USER');
+INSERT INTO tb_role (id, nome) VALUES (2, 'ROLE_ADMIN');
+
+-- garante que o próximo role_id seja 3
+ALTER TABLE tb_role ALTER COLUMN id RESTART WITH 3;
+
+-- ===============================
+-- PESSOAS (sem coluna role!)
+-- ===============================
+INSERT INTO tb_pessoa (id, email, telefone, password)
 VALUES (1, 'joao@email.com', '9999-9999',
-        '$2a$10$7EqJtq98hPqEX7fNZaFWoOa3P5xLrZJjF8EwF0lF6Z6MZlZQ4E8xC',
-        'ROLE_USER');
+        '$2a$10$7EqJtq98hPqEX7fNZaFWoOa3P5xLrZJjF8EwF0lF6Z6MZlZQ4E8xC');
 
 INSERT INTO tb_pessoa_fisica (id, nome, cpf)
 VALUES (1, 'João Silva', '12345678900');
 
-INSERT INTO tb_pessoa (id, email, telefone, password, role)
+INSERT INTO tb_pessoa (id, email, telefone, password)
 VALUES (2, 'maria@email.com', '1111-9999',
-        '$2a$10$7EqJtq98hPqEX7fNZaFWoOa3P5xLrZJjF8EwF0lF6Z6MZlZQ4E8xC',
-        'ROLE_USER');
+        '$2a$10$7EqJtq98hPqEX7fNZaFWoOa3P5xLrZJjF8EwF0lF6Z6MZlZQ4E8xC');
 
 INSERT INTO tb_pessoa_fisica (id, nome, cpf)
 VALUES (2, 'Maria Joaquina', '12345678978');
 
-INSERT INTO tb_pessoa (id, email, telefone, password, role)
+INSERT INTO tb_pessoa (id, email, telefone, password)
 VALUES (3, 'empresa@email.com', '8888-8888',
-        '$2a$10$7EqJtq98hPqEX7fNZaFWoOa3P5xLrZJjF8EwF0lF6Z6MZlZQ4E8xC',
-        'ROLE_ADMIN');
+        '$2a$10$7EqJtq98hPqEX7fNZaFWoOa3P5xLrZJjF8EwF0lF6Z6MZlZQ4E8xC');
 
 INSERT INTO tb_pessoa_juridica (id, razao_social, cnpj)
 VALUES (3, 'Tech Solutions Ltda', '1112223330001');
 
-INSERT INTO tb_pessoa (id, email, telefone, password, role)
+INSERT INTO tb_pessoa (id, email, telefone, password)
 VALUES (4, 'admin@admin.com', '11999998888',
-        '$2a$10$2iy3DcqYknmfKS2PmpO.kOHwayn./YExIquR8SeuflbXcYFWX138u',
-        'ROLE_ADMIN');
+        '$2a$10$2iy3DcqYknmfKS2PmpO.kOHwayn./YExIquR8SeuflbXcYFWX138u');
 
 INSERT INTO tb_pessoa_fisica (id, nome, cpf)
 VALUES (4, 'Administrador', '04510018185');
+
+-- ===============================
+-- RELAÇÃO PESSOA x ROLES
+-- ===============================
+-- João -> USER
+INSERT INTO tb_pessoa_roles (pessoa_id, role_id) VALUES (1, 1);
+
+-- Maria -> USER
+INSERT INTO tb_pessoa_roles (pessoa_id, role_id) VALUES (2, 1);
+
+-- Empresa -> ADMIN
+INSERT INTO tb_pessoa_roles (pessoa_id, role_id) VALUES (3, 2);
+
+-- Admin -> USER + ADMIN
+INSERT INTO tb_pessoa_roles (pessoa_id, role_id) VALUES (4, 1);
+INSERT INTO tb_pessoa_roles (pessoa_id, role_id) VALUES (4, 2);
+
+-- ===============================
+-- AJUSTE DO AUTO-INCREMENT PARA CONTINUAR DEPOIS DOS INSERTS
+-- ===============================
+ALTER TABLE tb_pessoa ALTER COLUMN id RESTART WITH 5;
+
 
 -- ===============================
 -- DEPARTAMENTOS
@@ -168,3 +204,13 @@ VALUES (3, 1, 1, 6); -- Teclado Mecânico RGB Pro na venda 1
 
 INSERT INTO tb_item_venda (id, quantidade, id_venda, id_produto)
 VALUES (4, 3, 2, 7); -- Teclado Mecânico RGB na venda 2
+
+-- ===============================
+-- AJUSTE FINAL DO AUTO-INCREMENT (DEPOIS DOS INSERTS!)
+-- ===============================
+ALTER TABLE tb_pessoa       ALTER COLUMN id RESTART WITH 5;
+ALTER TABLE tb_role         ALTER COLUMN id RESTART WITH 3;
+ALTER TABLE tb_departamento ALTER COLUMN id RESTART WITH 16;
+ALTER TABLE tb_produto      ALTER COLUMN id RESTART WITH 67;
+ALTER TABLE tb_venda        ALTER COLUMN id RESTART WITH 3;
+ALTER TABLE tb_item_venda   ALTER COLUMN id RESTART WITH 5;

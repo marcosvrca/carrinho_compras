@@ -4,6 +4,8 @@ import com.example.AtividadeAssociacao.model.Pessoa.Pessoa;
 import com.example.AtividadeAssociacao.model.Pessoa.PessoaFisica;
 import com.example.AtividadeAssociacao.model.Pessoa.PessoaJuridica;
 import com.example.AtividadeAssociacao.repository.PessoaRepository;
+import com.example.AtividadeAssociacao.repository.RoleRepository;
+import com.example.AtividadeAssociacao.security.Role;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +23,10 @@ public class CadastroPessoaController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
 
     @GetMapping
     public String listar(Model model) {
@@ -51,10 +57,18 @@ public class CadastroPessoaController {
             BindingResult bindingResult,
             Model model) {
 
-        pessoa.setRole("ROLE_USER");
-
+        // senha obrigatória
         if (pessoa.getPassword() == null || pessoa.getPassword().isBlank()) {
             bindingResult.rejectValue("password", "error.password", "A senha é obrigatória.");
+        }
+
+        // role padrão = ROLE_USER
+        Role roleUser = roleRepository.findByNome("ROLE_USER");
+        if (roleUser == null) {
+            bindingResult.reject("role", "Role ROLE_USER não encontrada no banco. Verifique o data.sql.");
+        } else {
+            pessoa.getRoles().clear();
+            pessoa.getRoles().add(roleUser);
         }
 
         if (bindingResult.hasErrors()) {
@@ -74,10 +88,18 @@ public class CadastroPessoaController {
             BindingResult bindingResult,
             Model model) {
 
-        pessoa.setRole("ROLE_USER");
-
+        // senha obrigatória
         if (pessoa.getPassword() == null || pessoa.getPassword().isBlank()) {
             bindingResult.rejectValue("password", "error.password", "A senha é obrigatória.");
+        }
+
+        // role padrão = ROLE_USER
+        Role roleUser = roleRepository.findByNome("ROLE_USER");
+        if (roleUser == null) {
+            bindingResult.reject("role", "Role ROLE_USER não encontrada no banco. Verifique o data.sql.");
+        } else {
+            pessoa.getRoles().clear();
+            pessoa.getRoles().add(roleUser);
         }
 
         if (bindingResult.hasErrors()) {
@@ -89,6 +111,7 @@ public class CadastroPessoaController {
         pessoaRepository.save(pessoa);
         return "redirect:/login";
     }
+
 
 
     @GetMapping("/editar/{id}")
@@ -140,12 +163,17 @@ public class CadastroPessoaController {
         }
 
         Pessoa pessoaBanco = pessoaRepository.findById(pessoa.getId());
+
+        // mantém a senha atual
         pessoa.setPassword(pessoaBanco.getPassword());
-        pessoa.setRole(pessoaBanco.getRole());
+
+        // mantém as roles atuais
+        pessoa.setRoles(pessoaBanco.getRoles());
 
         pessoaRepository.update(pessoa);
         return "redirect:/clientes";
     }
+
 
     @GetMapping("/remover/{id}")
     public String remover(@PathVariable Long id) {
