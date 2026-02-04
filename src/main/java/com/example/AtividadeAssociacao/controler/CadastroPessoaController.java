@@ -78,7 +78,7 @@ public class CadastroPessoaController {
 
         pessoa.setPassword(passwordEncoder.encode(pessoa.getPassword()));
         pessoaRepository.save(pessoa);
-        return "redirect:/login";
+        return "redirect:/clientes";
     }
 
 
@@ -109,7 +109,7 @@ public class CadastroPessoaController {
 
         pessoa.setPassword(passwordEncoder.encode(pessoa.getPassword()));
         pessoaRepository.save(pessoa);
-        return "redirect:/login";
+        return "redirect:/clientes";
     }
 
 
