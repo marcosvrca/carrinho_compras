@@ -74,7 +74,8 @@ public class SecurityConfig {
                         /* ================= VENDAS ================= */
                         .requestMatchers(
                                 "/vendas/finalizar",
-                                "/vendas/minhas-compras"
+                                "/vendas/minhas-compras",
+                                "/vendas/minhas-compras/**"
                         ).hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
 
                         .requestMatchers(

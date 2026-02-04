@@ -135,7 +135,8 @@ public class VendaController {
             return "redirect:/vendas";
         }
         model.addAttribute("venda", venda);
-        return "detail";
+        model.addAttribute("backUrl", "/vendas");
+        return "venda/detail";
     }
 
     @GetMapping("/filtrar")
@@ -219,6 +220,30 @@ public class VendaController {
         return "venda/minhas-compras";
     }
 
+    @GetMapping("/minhas-compras/{id}")
+    public String detalhesMinhaCompra(@PathVariable Long id, Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Pessoa clienteLogado = pessoaRepository.findByEmail(username);
+        if (clienteLogado == null) {
+            return "redirect:/login?error=clientNotFound";
+        }
+
+        // 🔒 pega a venda SOMENTE se for do cliente logado
+        Venda venda = vendaRepository.findByIdAndCliente(id, clienteLogado);
+        if (venda == null) {
+            // não existe ou não é dele
+            return "redirect:/vendas/minhas-compras?error=forbidden";
+        }
+
+        model.addAttribute("venda", venda);
+        model.addAttribute("backUrl", "/vendas/minhas-compras");
+        return "venda/detail";
+    }
+
+
     @GetMapping("/finalizar")
     public String finalizar() {
         Carrinho carrinho = carrinhoSession.getCarrinho();
@@ -263,4 +288,4 @@ public class VendaController {
 
                 return "venda/sucesso";
             }
-        }
+}

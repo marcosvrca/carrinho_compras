@@ -5,6 +5,7 @@ import com.example.AtividadeAssociacao.model.Venda;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,7 +98,17 @@ public class VendaRepository {
         return query.getResultList();
     }
 
+    public Venda findByIdAndCliente(Long id, Pessoa cliente) {
 
+        TypedQuery<Venda> query = em.createQuery(
+                "SELECT v FROM Venda v WHERE v.id = :id AND v.cliente = :cliente",
+                Venda.class
+        );
 
+        query.setParameter("id", id);
+        query.setParameter("cliente", cliente);
+
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
 
 }

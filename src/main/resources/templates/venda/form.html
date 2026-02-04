@@ -18,12 +18,12 @@
         <!-- Cliente -->
         <div class="mb-3">
             <label class="form-label">Cliente</label>
-            <select class="form-select" name="clienteId" required> <!-- Changed from th:field="*{cliente.id}" -->
+            <select class="form-select" name="clienteId" required>
                 <option value="">Selecione um cliente</option>
                 <option th:each="c : ${clientes}"
                         th:value="${c.id}"
                         th:text="${c.identificacao}"
-                        th:selected="${venda.cliente != null && venda.cliente.id == c.id}"> <!-- Add th:selected for editing -->
+                        th:selected="${venda.cliente != null && venda.cliente.id == c.id}">
                 </option>
             </select>
         </div>
@@ -31,8 +31,7 @@
         <!-- Data -->
         <div class="mb-3">
             <label class="form-label">Data da Venda</label>
-            <!-- Data is now set in controller on save, or can be pre-filled if editing -->
-            <input type="datetime-local" th:field="*{data}" class="form-control"> <!-- Removed readonly -->
+            <input type="datetime-local" th:field="*{data}" class="form-control">
         </div>
 
         <hr>
@@ -107,7 +106,7 @@
                 if (produtoId && quantidade > 0) {
                     var form = document.createElement('form');
                     form.method = 'post';
-                    form.action = [[@{/vendas/addItem}]]; // Thymeleaf URL expression
+                    form.action = [[@{/vendas/addItem}]];
 
                     var hiddenProdutoId = document.createElement('input');
                     hiddenProdutoId.type = 'hidden';
@@ -131,7 +130,7 @@
 
                     var hiddenClienteId = document.createElement('input');
                     hiddenClienteId.type = 'hidden';
-                    hiddenClienteId.name = 'clienteId'; // Corrected name
+                    hiddenClienteId.name = 'clienteId';
                     hiddenClienteId.value = [[${venda.cliente != null ? venda.cliente.id : ''}]];
                     form.appendChild(hiddenClienteId);
 

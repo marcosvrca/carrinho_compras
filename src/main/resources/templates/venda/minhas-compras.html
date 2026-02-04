@@ -21,7 +21,7 @@
                 <th>ID da Venda</th>
                 <th>Data da Venda</th>
                 <th>Total da Venda</th>
-                <th>Itens</th>
+                <th>Detalhes</th>
             </tr>
             </thead>
             <tbody>
@@ -30,13 +30,8 @@
                 <td th:text="${#temporals.format(venda.data, 'dd/MM/yyyy HH:mm')}"></td>
                 <td th:text="${#numbers.formatDecimal(venda.total(), 2, 'COMMA', 2, 'POINT')}"></td>
                 <td>
-                    <ul>
-                        <li th:each="item : ${venda.itens}">
-                            <span th:text="${item.produto.descricao}"></span> -
-                            <span th:text="${item.quantidade}"></span> x
-                            <span th:text="${#numbers.formatDecimal(item.produto.valor, 2, 'COMMA', 2, 'POINT')}"></span>
-                        </li>
-                    </ul>
+                    <a th:href="@{/vendas/minhas-compras/{id}(id=${venda.id})}"
+                       class="btn btn-sm btn-info">🔍 Ver Detalhes</a>
                 </td>
             </tr>
             </tbody>
