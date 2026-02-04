@@ -60,20 +60,33 @@ public class VendaController {
 
     // nova venda
     @GetMapping("/novo")
-    public String novo(Model model, @ModelAttribute("venda") Venda venda) {
-        // O método setupVenda() do atributo @ModelAttribute("venda") já garante uma Venda atualizada
-        // Basta fornecer os dados necessários para os menus suspensos.
+    public String novo(Model model, SessionStatus status) {
+        // limpa qualquer venda antiga da sessão
+        status.setComplete();
+
+        // cria uma venda NOVA
+        Venda venda = new Venda();
+        venda.setItens(new ArrayList<>());
+
+        model.addAttribute("venda", venda);
         model.addAttribute("clientes", pessoaRepository.findAll());
-        model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE)); // Get all products for selection
+        model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE));
         return "venda/form";
     }
+
 
     // Adicionar Item
     @PostMapping("/addItem")
     public String addItem(@RequestParam Long produtoId,
                           @RequestParam Integer quantidade,
-                          @ModelAttribute("venda") Venda venda, // Esta 'venda' é da sessão
+                          @RequestParam(required = false) Long clienteId,
+                          @ModelAttribute("venda") Venda venda,
                           Model model) {
+
+        if (clienteId != null) {
+            Pessoa cliente = pessoaRepository.findById(clienteId);
+            venda.setCliente(cliente);
+        }
 
         Produto produto = produtoRepository.buscarPorId(produtoId);
 
@@ -81,14 +94,15 @@ public class VendaController {
             ItemVenda item = new ItemVenda();
             item.setProduto(produto);
             item.setQuantidade(quantidade);
-            item.setVenda(venda); // associa o item a session-maneged por sessao
+            item.setVenda(venda);
             venda.getItens().add(item);
         }
 
         model.addAttribute("clientes", pessoaRepository.findAll());
-        model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE)); // Corrected
+        model.addAttribute("produtos", produtoRepository.findAll(0, Integer.MAX_VALUE));
         return "venda/form";
     }
+
 
     //Remover item
     @GetMapping("/removeItem")
@@ -109,23 +123,31 @@ public class VendaController {
     // ------------------------- SALVAR VENDA -------------------------
     @PostMapping("/salvar")
     public String salvar(@RequestParam Long clienteId,
-                         @ModelAttribute("venda") Venda venda, // Esta 'venda' é da sessão
-                         SessionStatus status) { // Injetar SessionStatus
+                         @ModelAttribute("venda") Venda venda,
+                         SessionStatus status) {
+
+        // garante que sempre vai inserir nova venda
+        venda.setId(null);
 
         Pessoa cliente = pessoaRepository.findById(clienteId);
         venda.setCliente(cliente);
-        // venda.setData(LocalDateTime.now()); // Removido - A data agora vem do formulário
 
-        // certificando de que o campo "venda" do ItemVenda esteja configurado para persistência
+        if (venda.getData() == null) {
+            venda.setData(LocalDateTime.now());
+        }
+
+
         for (ItemVenda item : venda.getItens()) {
             item.setVenda(venda);
+            item.setId(null);
         }
 
         vendaRepository.save(venda);
-        status.setComplete(); // Limpa atributos da sessao
+        status.setComplete();
 
         return "redirect:/vendas";
     }
+
 
     //Detalhes
     @GetMapping("/{id}")
@@ -231,7 +253,7 @@ public class VendaController {
             return "redirect:/login?error=clientNotFound";
         }
 
-        // 🔒 pega a venda SOMENTE se for do cliente logado
+        // pega a venda SOMENTE se for do cliente logado
         Venda venda = vendaRepository.findByIdAndCliente(id, clienteLogado);
         if (venda == null) {
             // não existe ou não é dele

@@ -2,13 +2,12 @@
 <html th:replace="~{fragmentos/layout :: layout(~{::head}, ~{::main})}"
       xmlns:th="http://www.thymeleaf.org">
 
-<!-- HEAD -->
 <head th:replace="~{fragmentos/head :: head(~{})}"></head>
 
-<!-- MAIN -->
 <main class="container mt-4">
 
-    <h2 class="mb-4" th:text="${departamento.id == null ? 'Novo Departamento' : 'Editar Departamento'}"></h2>
+    <h2 class="mb-4"
+        th:text="${departamento.id == null ? 'Novo Departamento' : 'Editar Departamento'}"></h2>
 
     <form th:action="@{/departamentos/salvar}" th:object="${departamento}" method="post">
         <input type="hidden" th:field="*{id}" />
@@ -21,12 +20,30 @@
 
         <div class="mb-3">
             <label for="descricao" class="form-label">Descrição:</label>
-            <textarea th:field="*{descricao}" class="form-control" id="descricao"></textarea>
+            <textarea th:field="*{descricao}" class="form-control" id="descricao" rows="3"></textarea>
             <div class="text-danger" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="/departamentos" class="btn btn-secondary">Cancelar</a>
+        <div class="mb-3">
+            <label class="form-label">Adicionar produtos ao departamento</label>
+
+            <select class="form-select" name="produtoIds" multiple size="10">
+                <option th:each="p : ${produtos}"
+                        th:value="${p.id}"
+                        th:text="${p.descricao}"
+                        th:selected="${produtoIdsSelecionados != null and produtoIdsSelecionados.contains(p.id)}">
+                </option>
+            </select>
+
+            <small class="text-muted">
+                Segure Ctrl (Windows) ou Cmd (Mac) para selecionar mais de um.
+            </small>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a th:href="@{/departamentos}" class="btn btn-secondary">Cancelar</a>
+        </div>
     </form>
 
 </main>

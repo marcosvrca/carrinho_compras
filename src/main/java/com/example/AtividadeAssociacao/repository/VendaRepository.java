@@ -20,8 +20,12 @@ public class VendaRepository {
     private EntityManager em;
 
     @Transactional
-    public void save(Venda venda) {
-        em.persist(venda);
+    public Venda save(Venda venda) {
+        if (venda.getId() == null) {
+            em.persist(venda);
+            return venda;
+        }
+        return em.merge(venda);
     }
 
     public Venda findById(Long id) {

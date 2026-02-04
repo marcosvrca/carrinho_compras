@@ -8,6 +8,7 @@ import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -33,6 +34,33 @@ public class ProdutoRepository {
         if (p != null) {
             em.remove(p);
         }
+    }
+
+    public List<Produto> findAll() {
+        return em.createQuery("SELECT p FROM Produto p", Produto.class)
+                .getResultList();
+    }
+
+    public List<Produto> findAllById(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return em.createQuery("SELECT p FROM Produto p WHERE p.id IN :ids", Produto.class)
+                .setParameter("ids", ids)
+                .getResultList();
+    }
+
+    public List<Produto> saveAll(List<Produto> produtos) {
+        if (produtos == null || produtos.isEmpty()) {
+            return Collections.emptyList();
+        }
+        for (Produto p : produtos) {
+            em.merge(p);
+        }
+        em.flush();
+
+        return produtos;
     }
 
     public List<Produto> findAll(int page, int size) {
@@ -93,8 +121,20 @@ public class ProdutoRepository {
     }
 
     public long countByDepartamentoId(Long departamentoId) {
-        return em.createQuery("SELECT COUNT(p) FROM Produto p WHERE p.departamento.id = :departamentoId", Long.class)
-                .setParameter("departamentoId", departamentoId)
+        return em.createQuery(
+                        "SELECT COUNT(p) FROM Produto p WHERE p.departamento.id = :departamentoId",
+                        Long.class
+                ).setParameter("departamentoId", departamentoId)
                 .getSingleResult();
     }
+
+    @Transactional
+    public void desvincularDepartamento(Long departamentoId) {
+        em.createQuery("UPDATE Produto p SET p.departamento = null WHERE p.departamento.id = :id")
+                .setParameter("id", departamentoId)
+                .executeUpdate();
+    }
+
+
+
 }

@@ -1,20 +1,18 @@
 package com.example.AtividadeAssociacao.model;
 
 import jakarta.persistence.*;
-
 @Entity
 @Table(name = "tb_departamento")
 public class Departamento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
     private String nome;
 
     private String descricao;
-
     public Long getId() {
         return id;
     }
