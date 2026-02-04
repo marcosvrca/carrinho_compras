@@ -31,3 +31,22 @@
 .toast.error {
     background-color: #dc3545;
 }
+
+
+.form-control {
+    color: #ecf0f1;
+}
+
+.form-control::placeholder {
+    color: #a0a0a0;
+    opacity: 1;
+}
+.form-control::-webkit-input-placeholder {
+    color: #a0a0a0;
+}
+.form-control:-ms-input-placeholder {
+    color: #a0a0a0;
+}
+.form-control::-ms-input-placeholder {
+    color: #a0a0a0;
+}
