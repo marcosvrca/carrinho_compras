@@ -207,7 +207,7 @@ VALUES (4, 3, 2, 7); -- Teclado Mecânico RGB na venda 2
 -- ===============================
 -- AJUSTE FINAL DO AUTO-INCREMENT (DEPOIS DOS INSERTS!)
 -- ===============================
-ALTER TABLE tb_pessoa       ALTER COLUMN id RESTART WITH 5;
+ALTER TABLE tb_pessoa       ALTER COLUMgoN id RESTART WITH 5;
 ALTER TABLE tb_role         ALTER COLUMN id RESTART WITH 3;
 ALTER TABLE tb_departamento ALTER COLUMN id RESTART WITH 16;
 ALTER TABLE tb_produto      ALTER COLUMN id RESTART WITH 67;
